@@ -190,18 +190,13 @@ class QB
      */ 
     public function setConfig(array $config, $connect = true)
     {      
-        if (is_array($config))
-        {
+        if (is_array($config)) {
             $this->_configData = $config;
-        }
-        
-        else
-        {
+        } else {
             throw new MongoQbException('No config variables passed');
         }
         
-        if ($connect)
-        {
+        if ($connect) {
             $this->_connectionString();
             $this->_connect();
         }
@@ -221,21 +216,16 @@ class QB
      */
     public function switchDb($database = '')
     {
-        if (empty($database))
-        {
+        if (empty($database)) {
             throw new MongoQbException('To switch MongoDB databases, a new database name must be specified');
         }
         
-        try
-        {
+        try {
             // Regenerate the connection string and reconnect
             $this->_configData['mongo_database'] = $database;
             $this->_connectionString();
             $this->_connect();
-        }
-        
-        catch (Exception $exception)
-        {
+        } catch (Exception $exception) {
             throw new MongoQbException('Unable to switch Mongo Databases: ' . $exception->getMessage());
         }
     }
@@ -260,28 +250,20 @@ class QB
      */
     public function select($includes = array(), $excludes = array())
     {
-        if ( ! is_array($includes))
-        {
+        if ( ! is_array($includes)) {
             $includes = array();
         }
     
-        if ( ! is_array($excludes))
-        {
+        if ( ! is_array($excludes)) {
             $excludes = array();
         }
         
-        if ( ! empty($includes))
-        {
-            foreach ($includes as $include)
-            {
+        if ( ! empty($includes)) {
+            foreach ($includes as $include) {
                 $this->_selects[$include] = 1;
             }
-        }
-        
-        else
-        {
-            foreach ($excludes as $exclude)
-            {
+        } else {
+            foreach ($excludes as $exclude) {
                 $this->_selects[$exclude] = 0;
             }
         }
@@ -308,16 +290,11 @@ class QB
      */
     public function where($wheres = array(), $value = NULL)
     {
-        if (is_array($wheres))
-        {
-            foreach ($wheres as $where => $value)
-            {
+        if (is_array($wheres)) {
+            foreach ($wheres as $where => $value) {
                 $this->wheres[$where] = $value;
             }
-        }
-        
-        else
-        {
+        } else {
             $this->wheres[$wheres] = $value;
         }
         
@@ -340,15 +317,12 @@ class QB
      */
     public function orWhere($wheres = array())
     {
-        if (count($wheres) > 0)
-        {
-            if ( ! isset($this->wheres['$or']) OR ! is_array($this->wheres['$or']))
-            {
+        if (count($wheres) > 0) {
+            if ( ! isset($this->wheres['$or']) OR ! is_array($this->wheres['$or'])) {
                 $this->wheres['$or'] = array();
             }
             
-            foreach ($wheres as $where => $value)
-            {
+            foreach ($wheres as $where => $value) {
                 $this->wheres['$or'][] = array($where => $value);
             }
         }
@@ -600,17 +574,13 @@ class QB
     {
         $this->_whereInit($field);
         
-        if ($spherical)
-        {
+        if ($spherical) {
             $this->wheres[$field]['$nearSphere'] = $coords;
-        }
-        else
-        {
+        } else {
             $this->wheres[$field]['$near'] = $coords;
         }
 
-        if ($distance !== NULL)
-        {
+        if ($distance !== NULL) {
             $this->wheres[$field]['$maxDistance'] = $distance;
         }
         
@@ -643,13 +613,11 @@ class QB
         $value = (string) trim($value);
         $value = quotemeta($value);
         
-        if ($enable_start_wildcard !== TRUE)
-        {
+        if ($enable_start_wildcard !== TRUE) {
             $value = '^' . $value;
         }
         
-        if ($enable_end_wildcard !== TRUE)
-        {
+        if ($enable_end_wildcard !== TRUE) {
             $value .= '$';
         }
         
@@ -674,15 +642,10 @@ class QB
      */
     public function orderBy($fields = array())
     {
-        foreach ($fields as $field => $order)
-        {
-            if ($order === -1 OR $order === FALSE OR strtolower($order) === 'desc')
-            {
+        foreach ($fields as $field => $order) {
+            if ($order === -1 OR $order === FALSE OR strtolower($order) === 'desc') {
                 $this->_sorts[$field] = -1; 
-            }
-            
-            else
-            {
+            } else {
                 $this->_sorts[$field] = 1;
             }
         }
@@ -706,8 +669,7 @@ class QB
      */
     public function limit($limit = 99999)
     {
-        if ($limit !== NULL AND is_numeric($limit) AND $limit >= 1)
-        {
+        if ($limit !== NULL AND is_numeric($limit) AND $limit >= 1) {
             $this->_limit = (int) $limit;
         }
         
@@ -730,8 +692,7 @@ class QB
      */
     public function offset($offset = 0)
     {
-        if ($offset !== NULL AND is_numeric($offset) AND $offset >= 1)
-        {
+        if ($offset !== NULL AND is_numeric($offset) AND $offset >= 1) {
             $this->_offset = (int) $offset;
         }
         
@@ -775,8 +736,7 @@ class QB
     */
     public function get($collection = '', $return_cursor = FALSE)
     {
-        if (empty($collection))
-        {
+        if (empty($collection)) {
             throw new MongoQbException('In order to retrieve documents from MongoDB, a collection name must be passed');
         }
 
@@ -791,22 +751,16 @@ class QB
         $this->_clear($collection, 'get');
 
         // Return the raw cursor if wanted
-        if ($return_cursor === TRUE)
-        {
+        if ($return_cursor === TRUE) {
             return $cursor;
         }
         
         $documents = array();
         
-        while ($cursor->hasNext())
-        {
-            try
-            {
+        while ($cursor->hasNext()) {
+            try {
                 $documents[] = $cursor->getNext();
-            }
-            
-            catch (MongoCursorException $exception)
-            {
+            } catch (MongoCursorException $exception) {
                 throw new MongoQbException($exception->getMessage());
             }
         }
@@ -830,8 +784,7 @@ class QB
     */
     public function count($collection = '')
     {
-        if (empty($collection))
-        {
+        if (empty($collection)) {
             throw new MongoQbException('In order to retrieve a count of documents from MongoDB, a collection name must be passed');
         }
         
@@ -864,13 +817,11 @@ class QB
      */
     public function insert($collection = '', $insert = array(), $options = array())
     {
-        if (empty($collection))
-        {
+        if (empty($collection)) {
             throw new MongoQbException('No Mongo collection selected to insert into');
         }
         
-        if (count($insert) === 0 OR ! is_array($insert))
-        {
+        if (count($insert) === 0 OR ! is_array($insert)) {
             throw new MongoQbException('Nothing to insert into Mongo collection or insert is not an array');
         }
         
@@ -881,25 +832,17 @@ class QB
                     $options
                 );
         
-        try
-        {
+        try {
             $this->_dbhandle
                 ->{$collection}
                 ->insert($insert, $options);
             
-            if (isset($insert['_id']))
-            {
+            if (isset($insert['_id'])) {
                 return $insert['_id'];
-            }
-            
-            else
-            {
+            } else {
                 return FALSE;
             }
-        }
-        
-        catch (MongoCursorException $exception)
-        {
+        } catch (MongoCursorException $exception) {
             throw new MongoQbException('Insert of data into MongoDB failed: ' .$exception->getMessage());
         }
     }
@@ -922,13 +865,11 @@ class QB
      */
     public function batchInsert($collection = '', $insert = array(), $options = array())
     {
-        if (empty($collection))
-        {
+        if (empty($collection)) {
             throw new MongoQbException('No Mongo collection selected to insert into');
         }
         
-        if (count($insert) === 0 || ! is_array($insert))
-        {
+        if (count($insert) === 0 || ! is_array($insert)) {
             throw new MongoQbException('Nothing to insert into Mongo collection or insert is not an array');
         }
         
@@ -939,15 +880,11 @@ class QB
                     $options
                 );
         
-        try
-        {
+        try {
             return $this->_dbhandle
                             ->{$collection}
                             ->batchInsert($insert, $options);           
-        }
-        
-        catch (MongoCursorException $exception)
-        {
+        } catch (MongoCursorException $exception) {
             throw new MongoQbException('Insert of data into MongoDB failed: ' . $exception->getMessage());
         }
     }
@@ -969,32 +906,25 @@ class QB
      */
     public function update($collection = '', $options = array())
     {
-        if (empty($collection))
-        {
+        if (empty($collection)) {
             throw new MongoQbException('No Mongo collection selected to update');
         }
         
-        if (count($this->updates) === 0)
-        {
+        if (count($this->updates) === 0) {
             throw new MongoQbException('Nothing to update in Mongo collection or update is not an array'); 
         }
                 
-        try
-        {
+        try {
             $options = array_merge(array($this->_query_safety => TRUE, 'multiple' => FALSE), $options);
             $result = $this->_dbhandle->{$collection}->update($this->wheres, $this->updates, $options);
             $this->_clear($collection, 'update');
             
-            if ($result['updatedExisting'] > 0)
-            {
+            if ($result['updatedExisting'] > 0) {
                 return $result['updatedExisting'];
             }
             
             return FALSE;
-        }
-        
-        catch (MongoCursorException $exception)
-        {
+        } catch (MongoCursorException $exception) {
             throw new MongoQbException('Update of data into MongoDB failed: ' . $exception->getMessage());
         }
     }
@@ -1017,32 +947,25 @@ class QB
      */
     public function updateAll($collection = '', $options = array())
     {
-        if (empty($collection))
-        {
+        if (empty($collection)) {
             throw new MongoQbException('No Mongo collection selected to update');
         }
         
-        if (count($this->updates) === 0)
-        {
+        if (count($this->updates) === 0) {
             throw new MongoQbException('Nothing to update in Mongo collection or update is not an array'); 
         }
                 
-        try
-        {
+        try {
             $options = array_merge(array($this->_query_safety => TRUE, 'multiple' => TRUE), $options);
             $result = $this->_dbhandle->{$collection}->update($this->wheres, $this->updates, $options);
             $this->_clear($collection, 'update_all');
             
-            if ($result['updatedExisting'] > 0)
-            {
+            if ($result['updatedExisting'] > 0) {
                 return $result['updatedExisting'];
             }
             
             return FALSE;
-        }
-        
-        catch (MongoCursorException $exception)
-        {
+        } catch (MongoCursorException $exception) {
             throw new MongoQbException('Update of data into MongoDB failed: ' . $exception->getMessage());
         }
     }
@@ -1066,15 +989,10 @@ class QB
     {
         $this->_updateInit§('$inc');
         
-        if (is_string($fields))
-        {
+        if (is_string($fields)) {
             $this->updates['$inc'][$fields] = $value;
-        }
-        
-        elseif (is_array($fields))
-        {
-            foreach ($fields as $field => $value)
-            {
+        } elseif (is_array($fields)) {
+            foreach ($fields as $field => $value) {
                 $this->updates['$inc'][$field] = $value;
             }
         }
@@ -1101,15 +1019,10 @@ class QB
     {
         $this->_updateInit('$inc');
         
-        if (is_string($fields))
-        {
+        if (is_string($fields)) {
             $this->updates['$inc'][$fields] = $value;
-        }
-        
-        elseif (is_array($fields))
-        {
-            foreach ($fields as $field => $value)
-            {
+        } elseif (is_array($fields)) {
+            foreach ($fields as $field => $value) {
                 $this->updates['$inc'][$field] = $value;
             }
         }
@@ -1137,15 +1050,10 @@ class QB
     {
         $this->_updateInit('$set');
         
-        if (is_string($fields))
-        {
+        if (is_string($fields)) {
             $this->updates['$set'][$fields] = $value;
-        }
-        
-        elseif (is_array($fields))
-        {
-            foreach ($fields as $field => $value)
-            {
+        } elseif (is_array($fields)) {
+            foreach ($fields as $field => $value) {
                 $this->updates['$set'][$field] = $value;
             }
         }
@@ -1171,15 +1079,10 @@ class QB
     {
         $this->_updateInit('$unset');
         
-        if (is_string($fields))
-        {
+        if (is_string($fields)) {
             $this->updates['$unset'][$fields] = 1;
-        }
-        
-        elseif (is_array($fields))
-        {
-            foreach ($fields as $field)
-            {
+        } elseif (is_array($fields)) {
+            foreach ($fields as $field) {
                 $this->updates['$unset'][$field] = 1;
             }
         }
@@ -1207,13 +1110,9 @@ class QB
     {
         $this->_updateInit('$addToSet');
         
-        if (is_string($values))
-        {
+        if (is_string($values)) {
             $this->updates['$addToSet'][$field] = $values;
-        }
-        
-        elseif (is_array($values))
-        {
+        } elseif (is_array($values)) {
             $this->updates['$addToSet'][$field] = array('$each' => $values);
         }
         
@@ -1240,15 +1139,10 @@ class QB
     {
         $this->_updateInit('$push');
         
-        if (is_string($fields))
-        {
+        if (is_string($fields)) {
             $this->updates['$push'][$fields] = $value;
-        }
-        
-        elseif (is_array($fields))
-        {
-            foreach ($fields as $field => $value)
-            {
+        } elseif (is_array($fields)) {
+            foreach ($fields as $field => $value) {
                 $this->updates['$push'][$field] = $value;
             }
         }
@@ -1275,15 +1169,10 @@ class QB
     {
         $this->_updateInit('$pop');
         
-        if (is_string($field))
-        {
+        if (is_string($field)) {
             $this->updates['$pop'][$field] = -1;
-        }
-        
-        elseif (is_array($field))
-        {
-            foreach ($field as $pop_field)
-            {
+        } elseif (is_array($field)) {
+            foreach ($field as $pop_field) {
                 $this->updates['$pop'][$pop_field] = -1;
             }
         }
@@ -1353,20 +1242,15 @@ class QB
      */
     public function delete($collection = '')
     {
-        if (empty($collection))
-        {
+        if (empty($collection)) {
             throw new MongoQbException('No Mongo collection selected to delete from');
         }
         
-        try
-        {
+        try {
             $this->_dbhandle->{$collection}->remove($this->wheres, array($this->_query_safety => TRUE, 'justOne' => TRUE));
             $this->_clear($collection, 'delete');
             return TRUE;
-        }
-        
-        catch (MongoCursorException $exception)
-        {
+        } catch (MongoCursorException $exception) {
             throw new MongoQbException('Delete of data into MongoDB failed: ' . $exception->getMessage());
         }
     }
@@ -1387,25 +1271,19 @@ class QB
      */ 
     public function deleteAll($collection = '')
     {
-        if (empty($collection))
-        {
+        if (empty($collection)) {
             throw new MongoQbException('No Mongo collection selected to delete from');
         }
         
-        if (isset($this->wheres['_id']) AND ! ($this->wheres['_id'] instanceof MongoId))
-        {
+        if (isset($this->wheres['_id']) AND ! ($this->wheres['_id'] instanceof MongoId)) {
             $this->wheres['_id'] = new MongoId($this->wheres['_id']);
         }
         
-        try
-        {
+        try {
             $this->_dbhandle->{$collection}->remove($this->wheres, array($this->_query_safety => TRUE, 'justOne' => FALSE));
             $this->_clear($collection, 'delete_all');
             return TRUE;
-        }
-        
-        catch (MongoCursorException $exception)
-        {
+        } catch (MongoCursorException $exception) {
             throw new MongoQbException('Delete of data into MongoDB failed: ' . $exception->getMessage());
         }   
     }
@@ -1426,14 +1304,10 @@ class QB
      */ 
     public function command($query = array())
     {
-        try
-        {
+        try {
             $execute = $this->_dbhandle->command($query);
             return $execute;
-        }
-        
-        catch (MongoCursorException $exception)
-        {
+        } catch (MongoCursorException $exception) {
             throw new MongoQbException('MongoDB command failed to execute: ' . $exception->getMessage());
         }
     }
@@ -1456,36 +1330,26 @@ class QB
      */ 
     public function addIndex($collection = '', $fields = array(), $options = array())
     {
-        if (empty($collection))
-        {
+        if (empty($collection)) {
             throw new MongoQbException('No Mongo collection specified to add index to');
         }
         
-        if (empty($fields) OR ! is_array($fields))
-        {
+        if (empty($fields) OR ! is_array($fields)) {
             throw new MongoQbException('Index could not be created to MongoDB Collection because no keys were specified');
         }
 
-        foreach ($fields as $field => $value)
-        {
-            if($value === -1 OR $value === FALSE OR strtolower($value) === 'desc')
-            {
+        foreach ($fields as $field => $value) {
+            if($value === -1 OR $value === FALSE OR strtolower($value) === 'desc') {
                 $keys[$field] = -1; 
-            }
-            else
-            {
+            } else {
                 $keys[$field] = 1;
             }
         }
         
-        if ($this->_dbhandle->{$collection}->ensureIndex($fields, $options) === TRUE)
-        {
+        if ($this->_dbhandle->{$collection}->ensureIndex($fields, $options) === TRUE) {
             $this->_clear($collection, 'add_index');
             return $this;
-        }
-        
-        else
-        {
+        } else {
             throw new MongoQbException('An error occurred when trying to add an index to MongoDB Collection');
         }
     }
@@ -1507,23 +1371,18 @@ class QB
      */ 
     public function removeIndex($collection = '', $keys = array())
     {
-        if (empty($collection))
-        {
+        if (empty($collection)) {
             throw new MongoQbException('No Mongo collection specified to remove index from');
         }
         
-        if (empty($keys) OR ! is_array($keys))
-        {
+        if (empty($keys) OR ! is_array($keys)) {
             throw new MongoQbException('Index could not be removed from MongoDB Collection because no keys were specified');
         }
         
-        if ($this->_dbhandle->{$collection}->deleteIndex($keys, $options) === TRUE)
-        {
+        if ($this->_dbhandle->{$collection}->deleteIndex($keys, $options) === TRUE) {
             $this->_clear($collection, 'remove_index');
             return $this;
-        }
-        else
-        {
+        } else {
             throw new MongoQbException('An error occurred when trying to remove an index from MongoDB Collection');
         }
     }
@@ -1544,8 +1403,7 @@ class QB
      */    
     public function removeAllIndexes($collection = '')
     {
-        if (empty($collection))
-        {
+        if (empty($collection)) {
             throw new MongoQbException('No Mongo collection specified to remove all indexes from');
         }
         $this->_dbhandle->{$collection}->deleteIndexes();
@@ -1569,8 +1427,7 @@ class QB
      */    
     public function listIndexes($collection = '')
     {
-        if (empty($collection))
-        {
+        if (empty($collection)) {
             throw new MongoQbException('No Mongo collection specified to remove all indexes from');
         }
         
@@ -1593,8 +1450,7 @@ class QB
      */    
     public function date($timestamp = NULL)
     {
-        if ($timestamp === NULL)
-        {   
+        if ($timestamp === NULL) {   
             return new MongoDate();
         }
         
@@ -1617,8 +1473,7 @@ class QB
      */    
     public function getDbref($object)
     {
-        if (empty($object) || ! isset($object))
-        {
+        if (empty($object) || ! isset($object)) {
             throw new MongoQbException('To use MongoDBRef::get() ala get_dbref() you must pass a valid reference object');
         }
         
@@ -1643,13 +1498,11 @@ class QB
      */
     public function createDbref($collection = '', $field = '', $db_name = '')
     {
-        if (empty($collection))
-        {
+        if (empty($collection)) {
             throw new MongoQbException('In order to retrieve documents from MongoDB, a collection name must be passed');
         }
         
-        if (empty($field) || ! isset($field))
-        {
+        if (empty($field) || ! isset($field)) {
             throw new MongoQbException('To use MongoDBRef::create() ala create_dbref() you must pass a valid field id of the object which to link');
         }
         
@@ -1690,30 +1543,22 @@ class QB
     {
         $options = array();
         
-        if ($this->_persist === TRUE)
-        {
+        if ($this->_persist === TRUE) {
             $options['persist'] = $this->_persist_key;
         }
         
-        if ($this->_replica_set !== FALSE)
-        {
+        if ($this->_replica_set !== FALSE) {
             $options['replicaSet'] = $this->_replica_set;
         }
         
-        try
-        {
+        try {
             $this->_connection = new Mongo($this->_connectionString, $options);
             $this->_dbhandle = $this->_connection->{$this->_dbname};
             return $this;   
-        } 
-        catch (MongoConnectionException $exception)
-        {
-            if($this->_configData['mongo_suppress_connect_error'])
-            {
+        } catch (MongoConnectionException $exception) {
+            if($this->_configData['mongo_suppress_connect_error']) {
                 throw new MongoQbException('Unable to connect to MongoDB');
-            }
-            else
-            {
+            } else {
                 throw new MongoQbException('Unable to connect to MongoDB: ' . $exception->getMessage());
             }
         }
@@ -1739,30 +1584,23 @@ class QB
         
         $connection_string = 'mongodb://';
                 
-        if (empty($this->_host))
-        {
+        if (empty($this->_host)) {
             throw new MongoQbException('The Host must be set to connect to MongoDB');
         }
         
-        if (empty($this->_dbname))
-        {
+        if (empty($this->_dbname)) {
             throw new MongoQbException('The database name must be set to connect to MongoDB');
         }
         
-        if ( ! empty($this->_user) AND ! empty($this->_pass))
-        {
+        if ( ! empty($this->_user) AND ! empty($this->_pass)) {
             $connection_string .= $this->_user . ':' . $this->_pass . '@';
         }
         
         $connection_string .= $this->_host;
         
-        if ($dbhostflag === TRUE)
-        {
+        if ($dbhostflag === TRUE) {
             $this->_connectionString = trim($connection_string) . '/' . $this->_dbname;
-        }
-        
-        else
-        {
+        } else {
             $this->_connectionString = trim($connection_string);
         }
     }
@@ -1806,8 +1644,7 @@ class QB
      */ 
     private function _whereInit($field)
     {
-        if ( ! isset($this->wheres[$field]))
-        {
+        if ( ! isset($this->wheres[$field])) {
             $this->wheres[$field] = array();
         }
     }
@@ -1824,8 +1661,7 @@ class QB
      */
     private function _updateInit($field = '')
     {
-        if ( ! isset($this->updates[$field]))
-        {
+        if ( ! isset($this->updates[$field])) {
             $this->updates[$field] = array();
         }
     }
