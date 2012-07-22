@@ -234,7 +234,7 @@ class QB
     * Drop a database.
     * 
     * <code>
-    * $this->mongo_db->drop_db("foobar");
+    * $mongoqb->drop_db("foobar");
     * </code>
     *
     * @param string $database Database name
@@ -270,7 +270,7 @@ class QB
      * Drop a collection.
      * 
      * <code>
-     * $this->mongo_db->drop_collection('foo', 'bar');
+     * $mongoqb->drop_collection('foo', 'bar');
      * </code>
      *
      * @param string $database   Database name
@@ -315,7 +315,7 @@ class QB
      * only choose fields to exclude, leave $includes an empty array().
      * 
      * <code>
-     * $this->mongo_db->select(array('foo', 'bar'))->get('foobar');
+     * $mongoqb->select(array('foo', 'bar'))->get('foobar');
      * </code>
      * 
      * @param array $includes Fields to include in the returned result
@@ -355,7 +355,7 @@ class QB
      * criteria.
      *
      * <code>
-     * $this->mongo_db->where(array('foo' => 'bar'))->get('foobar');
+     * $mongoqb->where(array('foo' => 'bar'))->get('foobar');
      * </code>
      *
      * @param array|string $wheres Array of where conditions. If string, $value must be set
@@ -383,7 +383,7 @@ class QB
      * Get the documents where the value of a $field may be something else
      * 
      * <code>
-     * $this->mongo_db->or_where(array('foo'=>'bar', 'bar'=>'foo'))->get('foobar');
+     * $mongoqb->or_where(array('foo'=>'bar', 'bar'=>'foo'))->get('foobar');
      * </code>
      *
      * @param array $wheres Array of where conditions
@@ -411,7 +411,7 @@ class QB
      * Get the documents where the value of a $field is in a given $in array().
      * 
      * <code>
-     * $this->mongo_db->where_in('foo', array('bar', 'zoo', 'blah'))->get('foobar');
+     * $mongoqb->where_in('foo', array('bar', 'zoo', 'blah'))->get('foobar');
      * </code>
      *
      * @param string $field     Name of the field
@@ -433,7 +433,7 @@ class QB
      * Get the documents where the value of a $field is in all of a given $in array().
      * 
      * <code>
-     * $this->mongo_db->where_in_all('foo', array('bar', 'zoo', 'blah'))->get('foobar');
+     * $mongoqb->where_in_all('foo', array('bar', 'zoo', 'blah'))->get('foobar');
      * </code>
      *
      * @param string $field     Name of the field
@@ -455,7 +455,7 @@ class QB
      * Get the documents where the value of a $field is not in a given $in array().
      * 
      * <code>
-     * $this->mongo_db->where_not_in('foo', array('bar', 'zoo', 'blah'))->get('foobar');
+     * $mongoqb->where_not_in('foo', array('bar', 'zoo', 'blah'))->get('foobar');
      * </code>
      *
      * @param string $field     Name of the field
@@ -477,7 +477,7 @@ class QB
      * Get the documents where the value of a $field is greater than $value
      * 
      * <code>
-     * $this->mongo_db->where_gt('foo', 20);
+     * $mongoqb->where_gt('foo', 20);
      * </code>
      *
      * @param string $field Name of the field
@@ -499,7 +499,7 @@ class QB
      * Get the documents where the value of a $field is greater than or equal to $value
      * 
      * <code>
-     * $this->mongo_db->where_gte('foo', 20);
+     * $mongoqb->where_gte('foo', 20);
      * </code>
      *
      * @param string $field Name of the field
@@ -521,7 +521,7 @@ class QB
      * Get the documents where the value of a $field is less than $x
      *
      * <code>
-     * $this->mongo_db->where_lt('foo', 20);
+     * $mongoqb->where_lt('foo', 20);
      * </code>
      *
      * @param string $field Name of the field
@@ -543,7 +543,7 @@ class QB
      * Get the documents where the value of a $field is less than or equal to $x
      *
      * <code>
-     * $this->mongo_db->where_lte('foo', 20);
+     * $mongoqb->where_lte('foo', 20);
      * </code>
      *
      * @param string $field Name of the field
@@ -565,7 +565,7 @@ class QB
      * Get the documents where the value of a $field is between $x and $y
      * 
      * <code>
-     * $this->mongo_db->where_between('foo', 20, 30);
+     * $mongoqb->where_between('foo', 20, 30);
      * </code>
      *
      * @param string $field   Name of the field
@@ -589,7 +589,7 @@ class QB
      * Get the documents where the value of a $field is between but not equal to $x and $y
      * 
      * <code>
-     * $this->mongo_db->where_between_ne('foo', 20, 30);
+     * $mongoqb->where_between_ne('foo', 20, 30);
      * </code>
      *
      * @param string $field   Name of the field
@@ -613,7 +613,7 @@ class QB
      * Get the documents where the value of a $field is not equal to $x
      * 
      * <code>
-     * $this->mongo_db->where_ne('foo', 1)->get('foobar');
+     * $mongoqb->where_ne('foo', 1)->get('foobar');
      * </code>
      *
      * @param string $field Name of the field
@@ -635,7 +635,7 @@ class QB
      * Get the documents nearest to an array of coordinates (your collection must have a geospatial index)
      * 
      * <code>
-     * $this->mongo_db->where_near('foo', array('50','50'))->get('foobar');
+     * $mongoqb->where_near('foo', array('50','50'))->get('foobar');
      * </code>
      *
      * @param string  $field     Name of the field
@@ -670,7 +670,7 @@ class QB
      * allow for a case-insensitive search.
      *
      * <code>
-     * $this->mongo_db->like('foo', 'bar', 'im', FALSE, TRUE);
+     * $mongoqb->like('foo', 'bar', 'im', FALSE, TRUE);
      * </code>
      *
      * @param string  $field                 The field
@@ -708,7 +708,7 @@ class QB
      * Sort the documents based on the parameters passed. To set values to descending order, you must pass values of either -1, FALSE, 'desc', or 'DESC', else they will be set to 1 (ASC).
      *
      * <code>
-     * $this->mongo_db->order_by(array('foo' => 'ASC'))->get('foobar');
+     * $mongoqb->order_by(array('foo' => 'ASC'))->get('foobar');
      * </code>
      *
      * @param array $fields Array of fields with their sort type (asc or desc)
@@ -735,7 +735,7 @@ class QB
      * Limit the result set to $limit number of documents
      *
      * <code>
-     * $this->mongo_db->_limit($x);
+     * $mongoqb->_limit($x);
      * </code>
      *
      * @param int $limit The maximum number of documents that will be returned
@@ -758,7 +758,7 @@ class QB
      * Offset the result set to skip $x number of documents
      *
      * <code>
-     * $this->mongo_db->_offset($x);
+     * $mongoqb->_offset($x);
      * </code>
      *
      * @param int $offset The number of documents to offset the search by
@@ -781,7 +781,7 @@ class QB
     * Get the documents based upon the passed parameters
     *
     * <code>
-    * $this->mongo_db->get_where('foo', array('bar' => 'something'));
+    * $mongoqb->get_where('foo', array('bar' => 'something'));
     * </code>
     *
     * @param string $collection Name of the collection
@@ -801,7 +801,7 @@ class QB
     * Return the found documents
     *
     * <code>
-    * $this->mongo_db->get('foo');
+    * $mongoqb->get('foo');
     * </code>
     *
     * @param string $collection    Name of the collection
@@ -850,7 +850,7 @@ class QB
     * Count the number of found documents
     *
     * <code>
-    * $this->mongo_db->count('foo');
+    * $mongoqb->count('foo');
     * </code>
     *
     * @param string $collection Name of the collection
@@ -881,7 +881,7 @@ class QB
      * Insert a new document
      *
      * <code>
-     * $this->mongo_db->insert('foo', array('foo'=>'bar'));
+     * $mongoqb->insert('foo', array('foo'=>'bar'));
      * </code>
      *
      * @param string $collection Name of the collection
@@ -929,7 +929,7 @@ class QB
      * Insert a new document
      *
      * <code>
-     * $this->mongo_db->insert('foo', array('foo'=>'bar'));
+     * $mongoqb->insert('foo', array('foo'=>'bar'));
      * </code>
      *
      * @param string $collection Name of the collection
@@ -971,7 +971,7 @@ class QB
      * Updates a document
      *
      * <code>
-     * $this->mongo_db->update('foo');
+     * $mongoqb->update('foo');
      * </code>
      *
      * @param string $collection Name of the collection
@@ -1012,7 +1012,7 @@ class QB
      * Updates a document
      *
      * <code>
-     * $this->mongo_db->update_all('foo');
+     * $mongoqb->update_all('foo');
      * </code>
      *
      * @param string $collection Name of the collection
@@ -1052,7 +1052,7 @@ class QB
      * Increments the value of a field
      *
      * <code>
-     * $this->mongo_db->where(array('blog_id'=>123))->inc(array('num_comments' => 1))->update('blog_posts');
+     * $mongoqb->where(array('blog_id'=>123))->inc(array('num_comments' => 1))->update('blog_posts');
      * </code>
      *
      * @param array|string $fields Array of field names (or a single string field name) to be incremented
@@ -1082,7 +1082,7 @@ class QB
      * Decrements the value of a field
      *
      * <code>
-     * $this->mongo_db->where(array('blog_id'=>123))->dec(array('num_comments' => 1))->update('blog_posts');
+     * $mongoqb->where(array('blog_id'=>123))->dec(array('num_comments' => 1))->update('blog_posts');
      * </code>
      *
      * @param array|string $fields Array of field names (or a single string field name) to be decremented
@@ -1112,8 +1112,8 @@ class QB
      * Sets a field to a value
      *
      * <code>
-     * $this->mongo_db->where(array('blog_id'=>123))->set('posted', 1)->update('blog_posts');
-     * $this->mongo_db->where(array('blog_id'=>123))->set(array('posted' => 1, 'time' => time()))->update('blog_posts');
+     * $mongoqb->where(array('blog_id'=>123))->set('posted', 1)->update('blog_posts');
+     * $mongoqb->where(array('blog_id'=>123))->set(array('posted' => 1, 'time' => time()))->update('blog_posts');
      * </code>
      *
      * @param array|string $fields Array of field names (or a single string field name)
@@ -1143,8 +1143,8 @@ class QB
      * Unsets a field (or fields)
      * 
      * <code>
-     * $this->mongo_db->where(array('blog_id'=>123))->unset('posted')->update('blog_posts');
-     * $this->mongo_db->where(array('blog_id'=>123))->set(array('posted','time'))->update('blog_posts');
+     * $mongoqb->where(array('blog_id'=>123))->unset('posted')->update('blog_posts');
+     * $mongoqb->where(array('blog_id'=>123))->set(array('posted','time'))->update('blog_posts');
      * 
      * @param array|string $fields Array of field names (or a single string field name) to be unset
      *
@@ -1172,8 +1172,8 @@ class QB
      * Adds value to the array only if its not in the array already
      *
      * <code>
-     * $this->mongo_db->where(array('blog_id'=>123))->addtoset('tags', 'php')->update('blog_posts');
-     * $this->mongo_db->where(array('blog_id'=>123))->addtoset('tags', array('php', 'codeigniter', 'mongodb'))->update('blog_posts');
+     * $mongoqb->where(array('blog_id'=>123))->addtoset('tags', 'php')->update('blog_posts');
+     * $mongoqb->where(array('blog_id'=>123))->addtoset('tags', array('php', 'codeigniter', 'mongodb'))->update('blog_posts');
      * </code>
      *
      * @param string       $field  Name of the field
@@ -1201,8 +1201,8 @@ class QB
      * Pushes values into a field (field must be an array)
      *
      * <code>
-     * $this->mongo_db->where(array('blog_id'=>123))->push('comments', array('text'=>'Hello world'))->update('blog_posts');
-     * $this->mongo_db->where(array('blog_id'=>123))->push(array('comments' => array('text'=>'Hello world')), 'viewed_by' => array('Alex')->update('blog_posts');
+     * $mongoqb->where(array('blog_id'=>123))->push('comments', array('text'=>'Hello world'))->update('blog_posts');
+     * $mongoqb->where(array('blog_id'=>123))->push(array('comments' => array('text'=>'Hello world')), 'viewed_by' => array('Alex')->update('blog_posts');
      * </code>
      *
      * @param array|string $fields Array of field names (or a single string field name)
@@ -1232,8 +1232,8 @@ class QB
      * Pops the last value from a field (field must be an array)
      * 
      * <code>
-     * $this->mongo_db->where(array('blog_id'=>123))->pop('comments')->update('blog_posts');
-     * $this->mongo_db->where(array('blog_id'=>123))->pop(array('comments', 'viewed_by'))->update('blog_posts');
+     * $mongoqb->where(array('blog_id'=>123))->pop('comments')->update('blog_posts');
+     * $mongoqb->where(array('blog_id'=>123))->pop(array('comments', 'viewed_by'))->update('blog_posts');
      * </code>
      *
      * @param string $field Name of the field to be popped
@@ -1262,7 +1262,7 @@ class QB
      * Removes by an array by the value of a field
      *
      * <code>
-     * $this->mongo_db->pull('comments', array('comment_id'=>123))->update('blog_posts');
+     * $mongoqb->pull('comments', array('comment_id'=>123))->update('blog_posts');
      * </code>
      *
      * @param string $field Name of the field
@@ -1286,7 +1286,7 @@ class QB
      * Renames a field
      *
      * <code>
-     * $this->mongo_db->where(array('blog_id'=>123))->rename_field('posted_by', 'author')->update('blog_posts');
+     * $mongoqb->where(array('blog_id'=>123))->rename_field('posted_by', 'author')->update('blog_posts');
      * </code>
      *
      * @param string $old_name Name of the field to be renamed
@@ -1308,7 +1308,7 @@ class QB
      * delete document from the passed collection based upon certain criteria
      *
      * <code>
-     * $this->mongo_db->delete('foo');
+     * $mongoqb->delete('foo');
      * </code>
      *
      * @param string $collection Name of the collection
@@ -1337,7 +1337,7 @@ class QB
      * Delete all documents from the passed collection based upon certain criteria
      *
      * <code>
-     * $this->mongo_db->delete_all('foo', $data = array());
+     * $mongoqb->delete_all('foo', $data = array());
      * </code>
      *
      * @param string $collection Name of the collection
@@ -1370,7 +1370,7 @@ class QB
      * Runs a MongoDB command (such as GeoNear). See the MongoDB documentation for more usage scenarios - http://dochub.mongodb.org/core/commands
      *
      * <code>
-     * $this->mongo_db->command(array('geoNear'=>'buildings', 'near'=>array(53.228482, -0.547847), 'num' => 10, 'nearSphere'=>true));
+     * $mongoqb->command(array('geoNear'=>'buildings', 'near'=>array(53.228482, -0.547847), 'num' => 10, 'nearSphere'=>true));
      * </code>
      *
      * @param array $query The command query
@@ -1394,7 +1394,7 @@ class QB
      * Ensure an index of the keys in a collection with optional parameters. To set values to descending order, you must pass values of either -1, FALSE, 'desc', or 'DESC', else they will be set to 1 (ASC).
      *
      * <code>
-     * $this->mongo_db->add_index($collection, array('first_name' => 'ASC', 'last_name' => -1), array('unique' => TRUE));
+     * $mongoqb->add_index($collection, array('first_name' => 'ASC', 'last_name' => -1), array('unique' => TRUE));
      * </code>
      *
      * @param string $collection Name of the collection
@@ -1436,7 +1436,7 @@ class QB
      * Remove an index of the keys in a collection. To set values to descending order, you must pass values of either -1, FALSE, 'desc', or 'DESC', else they will be set to 1 (ASC).
      * 
      * <code>
-     * $this->mongo_db->remove_index($collection, array('first_name' => 'ASC', 'last_name' => -1));
+     * $mongoqb->remove_index($collection, array('first_name' => 'ASC', 'last_name' => -1));
      * </code>
      * 
      * @param string $collection Name of the collection
@@ -1469,7 +1469,7 @@ class QB
      * Remove all indexes from a collection.
      *
      * <code>
-     * $this->mongo_db->remove_all_index($collection);
+     * $mongoqb->remove_all_index($collection);
      * </code>
      *
      * @param string $collection Name of the collection
@@ -1493,7 +1493,7 @@ class QB
      * Lists all indexes in a collection.
      *
      * <code>
-     * $this->mongo_db->list_indexes($collection);
+     * $mongoqb->list_indexes($collection);
      * </code>
      *
      * @param string $collection Name of the collection
@@ -1516,7 +1516,7 @@ class QB
      * Create new MongoDate object from current time or pass timestamp to create mongodate.
      * 
      * <code>
-     * $this->mongo_db->date($timestamp);
+     * $mongoqb->date($timestamp);
      * </code>
      *
      * @param int|null $timestamp A unix timestamp (or NULL to return a MongoDate relative to time()
@@ -1539,7 +1539,7 @@ class QB
      * Get mongo object from database reference using MongoDBRef
      *
      * <code>
-     * $this->mongo_db->get_dbref($object);
+     * $mongoqb->get_dbref($object);
      * </code>
      *
      * @param object $object A dbref object
@@ -1562,7 +1562,7 @@ class QB
      * Create mongo dbref object to store later
      * 
      * <code>
-     * $ref = $this->mongo_db->create_dbref($collection, $id);
+     * $ref = $mongoqb->create_dbref($collection, $id);
      * </code>
      *
      * @param string $collection Collection name
@@ -1593,7 +1593,7 @@ class QB
      * Return the last query
      * 
      * <code>
-     * print_r($this->mongo_db->last_query());
+     * print_r($mongoqb->last_query());
      * </code>
      *
      * @access public
