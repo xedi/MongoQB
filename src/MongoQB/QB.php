@@ -338,7 +338,7 @@ class QB
      * @access public
      * @return object
      */
-    public function or_where($wheres = array())
+    public function orWhere($wheres = array())
     {
         if (count($wheres) > 0)
         {
@@ -370,9 +370,9 @@ class QB
      * @access public
      * @return object
      */
-    public function where_in($field = '', $in_values = array())
+    public function whereIn($field = '', $in_values = array())
     {
-        $this->_where_init($field);
+        $this->_whereInit($field);
         $this->wheres[$field]['$in'] = $in_values;
         return $this;
     }
@@ -392,9 +392,9 @@ class QB
      * @access public
      * @return object
      */ 
-    public function where_in_all($field = '', $in_values = array())
+    public function whereInAll($field = '', $in_values = array())
     {
-        $this->_where_init($field);
+        $this->_whereInit($field);
         $this->wheres[$field]['$all'] = $in_values;
         return $this;
     }
@@ -414,9 +414,9 @@ class QB
      * @access public
      * @return object
      */ 
-    public function where_not_in($field = '', $in_values = array())
+    public function whereNotIn($field = '', $in_values = array())
     {
-        $this->_where_init($field);
+        $this->_whereInit($field);
         $this->wheres[$field]['$nin'] = $in_values;
         return $this;
     }
@@ -436,9 +436,9 @@ class QB
      * @access public
      * @return object
      */
-    public function where_gt($field = '', $value = NULL)
+    public function whereGt($field = '', $value = NULL)
     {
-        $this->_where_init($field);
+        $this->_whereInit($field);
         $this->wheres[$field]['$gt'] = $value;
         return $this;
     }
@@ -458,9 +458,9 @@ class QB
      * @access public
      * @return object
      */
-    public function where_gte($field = '', $value = NULL)
+    public function whereGte($field = '', $value = NULL)
     {
-        $this->_where_init($field);
+        $this->_whereInit($field);
         $this->wheres[$field]['$gte'] = $value;
         return $this;
     }
@@ -480,9 +480,9 @@ class QB
      * @access public
      * @return object
      */
-    public function where_lt($field = '', $value = NULL)
+    public function whereLt($field = '', $value = NULL)
     {
-        $this->_where_init($field);
+        $this->_whereInit($field);
         $this->wheres[$field]['$lt'] = $value;
         return $this;
     }
@@ -502,9 +502,9 @@ class QB
      * @access public
      * @return object
      */
-    public function where_lte($field = '', $value = NULL)
+    public function whereLte($field = '', $value = NULL)
     {
-        $this->_where_init($field);
+        $this->_whereInit($field);
         $this->wheres[$field]['$lte'] = $value;
         return $this;
     }
@@ -525,9 +525,9 @@ class QB
      * @access public
      * @return object
      */
-    public function where_between($field = '', $value_x = 0, $value_y = 0)
+    public function whereBetween($field = '', $value_x = 0, $value_y = 0)
     {
-        $this->_where_init($field);
+        $this->_whereInit($field);
         $this->wheres[$field]['$gte'] = $value_x;
         $this->wheres[$field]['$lte'] = $value_y;
         return $this;
@@ -549,9 +549,9 @@ class QB
      * @access public
      * @return object
      */
-    public function where_between_ne($field = '', $value_x, $value_y)
+    public function whereBetweenNe($field = '', $value_x, $value_y)
     {
-        $this->_where_init($field);
+        $this->_whereInit($field);
         $this->wheres[$field]['$gt'] = $value_x;
         $this->wheres[$field]['$lt'] = $value_y;
         return $this;
@@ -572,9 +572,9 @@ class QB
      * @access public
      * @return object
      */
-    public function where_ne($field = '', $value)
+    public function whereNe($field = '', $value)
     {
-        $this->_where_init($field);
+        $this->_whereInit($field);
         $this->wheres[$field]['$ne'] = $value;
         return $this;
     }
@@ -596,9 +596,9 @@ class QB
      * @access public
      * @return object
      */
-    function where_near($field = '', $coords = array(), $distance = NULL, $spherical = FALSE)
+    function whereNear($field = '', $coords = array(), $distance = NULL, $spherical = FALSE)
     {
-        $this->_where_init($field);
+        $this->_whereInit($field);
         
         if ($spherical)
         {
@@ -639,7 +639,7 @@ class QB
     public function like($field = '', $value = '', $flags = 'i', $enable_start_wildcard = TRUE, $enable_end_wildcard = TRUE)
     {
         $field = (string) trim($field);
-        $this->_where_init($field);
+        $this->_whereInit($field);
         $value = (string) trim($value);
         $value = quotemeta($value);
         
@@ -672,7 +672,7 @@ class QB
      * @access public
      * @return object
      */
-    public function order_by($fields = array())
+    public function orderBy($fields = array())
     {
         foreach ($fields as $field => $order)
         {
@@ -753,7 +753,7 @@ class QB
     * @access public
     * @return array
     */  
-    public function get_where($collection = '', $where = array())
+    public function getWhere($collection = '', $where = array())
     {
         return $this->where($where)->get($collection);
     }
@@ -920,7 +920,7 @@ class QB
      * @access public
      * @return boolean
      */
-    public function batch_insert($collection = '', $insert = array(), $options = array())
+    public function batchInsert($collection = '', $insert = array(), $options = array())
     {
         if (empty($collection))
         {
@@ -1015,7 +1015,7 @@ class QB
      * @access public
      * @return boolean
      */
-    public function update_all($collection = '', $options = array())
+    public function updateAll($collection = '', $options = array())
     {
         if (empty($collection))
         {
@@ -1064,7 +1064,7 @@ class QB
      */ 
     public function inc($fields = array(), $value = 0)
     {
-        $this->_update_init('$inc');
+        $this->_updateInit('$inc');
         
         if (is_string($fields))
         {
@@ -1099,7 +1099,7 @@ class QB
      */ 
     public function dec($fields = array(), $value = 0)
     {
-        $this->_update_init('$inc');
+        $this->_updateInit('$inc');
         
         if (is_string($fields))
         {
@@ -1135,7 +1135,7 @@ class QB
      */
     public function set($fields, $value = NULL)
     {
-        $this->_update_init('$set');
+        $this->_updateInit('$set');
         
         if (is_string($fields))
         {
@@ -1167,9 +1167,9 @@ class QB
      * @access public
      * @return object   
      */
-    public function unset_field($fields)
+    public function unsetField($fields)
     {
-        $this->_update_init('$unset');
+        $this->_updateInit('$unset');
         
         if (is_string($fields))
         {
@@ -1203,9 +1203,9 @@ class QB
      * @access public
      * @return object   
      */
-    public function addtoset($field, $values)
+    public function addToSet($field, $values)
     {
-        $this->_update_init('$addToSet');
+        $this->_updateInit('$addToSet');
         
         if (is_string($values))
         {
@@ -1238,7 +1238,7 @@ class QB
      */
     public function push($fields, $value = array())
     {
-        $this->_update_init('$push');
+        $this->_updateInit('$push');
         
         if (is_string($fields))
         {
@@ -1273,7 +1273,7 @@ class QB
      */
     public function pop($field)
     {
-        $this->_update_init('$pop');
+        $this->_updateInit('$pop');
         
         if (is_string($field))
         {
@@ -1308,7 +1308,7 @@ class QB
      */
     public function pull($field = '', $value = array())
     {
-        $this->_update_init('$pull');
+        $this->_updateInit('$pull');
     
         $this->updates['$pull'] = array($field => $value);
         
@@ -1330,9 +1330,9 @@ class QB
      * @access public
      * @return object
      */ 
-    public function rename_field($old_name, $new_name)
+    public function renameField($old_name, $new_name)
     {
-        $this->_update_init('$rename');
+        $this->_updateInit('$rename');
         $this->updates['$rename'][] = array($old_name => $new_name);
         return $this;
     }
@@ -1385,7 +1385,7 @@ class QB
      * @access public
      * @return object
      */ 
-    public function delete_all($collection = '')
+    public function deleteAll($collection = '')
     {
         if (empty($collection))
         {
@@ -1454,7 +1454,7 @@ class QB
      * @access public
      * @return object
      */ 
-    public function add_index($collection = '', $fields = array(), $options = array())
+    public function addIndex($collection = '', $fields = array(), $options = array())
     {
         if (empty($collection))
         {
@@ -1505,7 +1505,7 @@ class QB
      * @access public
      * @return object
      */ 
-    public function remove_index($collection = '', $keys = array())
+    public function removeIndex($collection = '', $keys = array())
     {
         if (empty($collection))
         {
@@ -1542,7 +1542,7 @@ class QB
      * @access public
      * @return array|object
      */    
-    public function remove_all_indexes($collection = '')
+    public function removeAllIndexes($collection = '')
     {
         if (empty($collection))
         {
@@ -1567,7 +1567,7 @@ class QB
      * @access public
      * @return array|object
      */    
-    public function list_indexes($collection = '')
+    public function listIndexes($collection = '')
     {
         if (empty($collection))
         {
@@ -1615,7 +1615,7 @@ class QB
      * @access public
      * @return array|object
      */    
-    public function get_dbref($object)
+    public function getDbref($object)
     {
         if (empty($object) || ! isset($object))
         {
@@ -1641,7 +1641,7 @@ class QB
      * @access public
      * @return array|object
      */
-    public function create_dbref($collection = '', $field = '', $db_name = '')
+    public function createDbref($collection = '', $field = '', $db_name = '')
     {
         if (empty($collection))
         {
@@ -1670,7 +1670,7 @@ class QB
      * @access public
      * @return array
      */
-    public function last_query()
+    public function lastQuery()
     {
         return $this->_query_log;
     }
@@ -1725,7 +1725,7 @@ class QB
      * @access private
      * @return void
      */
-    private function _connection_string() 
+    private function _connectionString() 
     {       
         $this->_host = trim($this->_config_data['mongo_hostbase']);
         $this->_user = trim($this->_config_data['mongo_username']);
@@ -1804,7 +1804,7 @@ class QB
      * @access private
      * @return void
      */ 
-    private function _where_init($field)
+    private function _whereInit($field)
     {
         if ( ! isset($this->wheres[$field]))
         {
@@ -1822,36 +1822,11 @@ class QB
      * @access private
      * @return void
      */
-    private function _update_init($field = '')
+    private function _updateInit($field = '')
     {
         if ( ! isset($this->updates[$field]))
         {
             $this->updates[$field] = array();
         }
     }
-
-    /**
-     * Show error.
-     *
-     * If using CodeIgniter use show_error otherwise throw an exception.
-     *
-     * @param string $error_message Error message
-     * @param int    $response_code Response code 
-     *
-     * @access private
-     * @return void
-     */
-    private function _show_error($error_message = '', $response_code = 500)
-    {
-        if ( ! function_exists('show_error')) // If we're not using CodeIgniter throw a normal exception
-        {
-            throw new Exception ($error_message);
-        }
-        
-        else // CodeIgniter show_error() function
-        {
-            show_error($error_message, $response_code);
-        }
-    }
-
 }
