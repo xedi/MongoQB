@@ -20,7 +20,7 @@ class QB
      * @var mixed
      * @access private
      */
-    private $_connection = NULL;
+    private $_connection = null;
     
     /**
      * Database handle.
@@ -28,7 +28,7 @@ class QB
      * @var resource
      * @access private
      */
-    private $_dbhandle = NULL;
+    private $_dbhandle = null;
     
     /**
      * Generated connection string.
@@ -76,7 +76,7 @@ class QB
      * @var boolean
      * @access private
      */
-    private $_persist = TRUE;
+    private $_persist = true;
     
     /**
      * Persist key.
@@ -89,10 +89,10 @@ class QB
     /**
      * Use replica set.
      * 
-     * @var FALSE|string
+     * @var false|string
      * @access private
      */
-    private $_replicaSet = FALSE;
+    private $_replicaSet = false;
     
     /**
      * Query safety value.
@@ -254,7 +254,7 @@ class QB
             try
             {
                 $this->_connection->{$database}->drop();
-                return TRUE;
+                return true;
             }
 
             catch (Exception $exception)
@@ -296,7 +296,7 @@ class QB
             try
             {
                 $this->_connection->{$database}->{$collection}->drop();
-                return TRUE;
+                return true;
             }
             
             catch (Exception $exception)
@@ -364,7 +364,7 @@ class QB
      * @access public
      * @return object
      */
-    public function where($wheres = array(), $value = NULL)
+    public function where($wheres = array(), $value = null)
     {
         if (is_array($wheres)) {
             foreach ($wheres as $where => $value) {
@@ -486,7 +486,7 @@ class QB
      * @access public
      * @return object
      */
-    public function whereGt($field = '', $value = NULL)
+    public function whereGt($field = '', $value = null)
     {
         $this->_whereInit($field);
         $this->wheres[$field]['$gt'] = $value;
@@ -508,7 +508,7 @@ class QB
      * @access public
      * @return object
      */
-    public function whereGte($field = '', $value = NULL)
+    public function whereGte($field = '', $value = null)
     {
         $this->_whereInit($field);
         $this->wheres[$field]['$gte'] = $value;
@@ -530,7 +530,7 @@ class QB
      * @access public
      * @return object
      */
-    public function whereLt($field = '', $value = NULL)
+    public function whereLt($field = '', $value = null)
     {
         $this->_whereInit($field);
         $this->wheres[$field]['$lt'] = $value;
@@ -552,7 +552,7 @@ class QB
      * @access public
      * @return object
      */
-    public function whereLte($field = '', $value = NULL)
+    public function whereLte($field = '', $value = null)
     {
         $this->_whereInit($field);
         $this->wheres[$field]['$lte'] = $value;
@@ -646,7 +646,7 @@ class QB
      * @access public
      * @return object
      */
-    function whereNear($field = '', $coords = array(), $distance = NULL, $spherical = FALSE)
+    function whereNear($field = '', $coords = array(), $distance = null, $spherical = false)
     {
         $this->_whereInit($field);
         
@@ -656,7 +656,7 @@ class QB
             $this->wheres[$field]['$near'] = $coords;
         }
 
-        if ($distance !== NULL) {
+        if ($distance !== null) {
             $this->wheres[$field]['$maxDistance'] = $distance;
         }
         
@@ -670,30 +670,30 @@ class QB
      * allow for a case-insensitive search.
      *
      * <code>
-     * $mongoqb->like('foo', 'bar', 'im', FALSE, TRUE);
+     * $mongoqb->like('foo', 'bar', 'im', false, true);
      * </code>
      *
      * @param string  $field                 The field
      * @param string  $value                 The value to match against
      * @param string  $flags                 Allows for the typical regular expression flags:<br>i = case insensitive<br>m = multiline<br>x = can contain comments<br>l = locale<br>s = dotall, "." matches everything, including newlines<br>u = match unicode
-     * @param boolean $enable_start_wildcard If set to anything other than TRUE, a starting line character "^" will be prepended to the search value, representing only searching for a value at the start of a new line.
-     * @param boolean $enable_end_wildcard   If set to anything other than TRUE, an ending line character "$" will be appended to the search value, representing only searching for a value at the end of a line.
+     * @param boolean $enable_start_wildcard If set to anything other than true, a starting line character "^" will be prepended to the search value, representing only searching for a value at the start of a new line.
+     * @param boolean $enable_end_wildcard   If set to anything other than true, an ending line character "$" will be appended to the search value, representing only searching for a value at the end of a line.
      *
      * @access public
      * @return object
      */
-    public function like($field = '', $value = '', $flags = 'i', $enable_start_wildcard = TRUE, $enable_end_wildcard = TRUE)
+    public function like($field = '', $value = '', $flags = 'i', $enable_start_wildcard = true, $enable_end_wildcard = true)
     {
         $field = (string) trim($field);
         $this->_whereInit($field);
         $value = (string) trim($value);
         $value = quotemeta($value);
         
-        if ($enable_start_wildcard !== TRUE) {
+        if ($enable_start_wildcard !== true) {
             $value = '^' . $value;
         }
         
-        if ($enable_end_wildcard !== TRUE) {
+        if ($enable_end_wildcard !== true) {
             $value .= '$';
         }
         
@@ -705,7 +705,7 @@ class QB
     /**
      * order_by
      *
-     * Sort the documents based on the parameters passed. To set values to descending order, you must pass values of either -1, FALSE, 'desc', or 'DESC', else they will be set to 1 (ASC).
+     * Sort the documents based on the parameters passed. To set values to descending order, you must pass values of either -1, false, 'desc', or 'DESC', else they will be set to 1 (ASC).
      *
      * <code>
      * $mongoqb->order_by(array('foo' => 'ASC'))->get('foobar');
@@ -719,7 +719,7 @@ class QB
     public function orderBy($fields = array())
     {
         foreach ($fields as $field => $order) {
-            if ($order === -1 OR $order === FALSE OR strtolower($order) === 'desc') {
+            if ($order === -1 OR $order === false OR strtolower($order) === 'desc') {
                 $this->_sorts[$field] = -1; 
             } else {
                 $this->_sorts[$field] = 1;
@@ -745,7 +745,7 @@ class QB
      */
     public function limit($limit = 99999)
     {
-        if ($limit !== NULL AND is_numeric($limit) AND $limit >= 1) {
+        if ($limit !== null AND is_numeric($limit) AND $limit >= 1) {
             $this->_limit = (int) $limit;
         }
         
@@ -768,7 +768,7 @@ class QB
      */
     public function offset($offset = 0)
     {
-        if ($offset !== NULL AND is_numeric($offset) AND $offset >= 1) {
+        if ($offset !== null AND is_numeric($offset) AND $offset >= 1) {
             $this->_offset = (int) $offset;
         }
         
@@ -810,7 +810,7 @@ class QB
     * @access public
     * @return array
     */
-    public function get($collection = '', $return_cursor = FALSE)
+    public function get($collection = '', $return_cursor = false)
     {
         if (empty($collection)) {
             throw new MongoQbException('In order to retrieve documents from MongoDB, a collection name must be passed');
@@ -827,7 +827,7 @@ class QB
         $this->_clear($collection, 'get');
 
         // Return the raw cursor if wanted
-        if ($return_cursor === TRUE) {
+        if ($return_cursor === true) {
             return $cursor;
         }
         
@@ -903,7 +903,7 @@ class QB
         
         $options = array_merge(
                     array(
-                        $this->_query_safety => TRUE
+                        $this->_query_safety => true
                     ),
                     $options
                 );
@@ -916,7 +916,7 @@ class QB
             if (isset($insert['_id'])) {
                 return $insert['_id'];
             } else {
-                return FALSE;
+                return false;
             }
         } catch (MongoCursorException $exception) {
             throw new MongoQbException('Insert of data into MongoDB failed: ' .$exception->getMessage());
@@ -951,7 +951,7 @@ class QB
         
         $options = array_merge(
                     array(
-                        $this->_query_safety => TRUE
+                        $this->_query_safety => true
                     ),
                     $options
                 );
@@ -991,7 +991,7 @@ class QB
         }
                 
         try {
-            $options = array_merge(array($this->_query_safety => TRUE, 'multiple' => FALSE), $options);
+            $options = array_merge(array($this->_query_safety => true, 'multiple' => false), $options);
             $result = $this->_dbhandle->{$collection}->update($this->wheres, $this->updates, $options);
             $this->_clear($collection, 'update');
             
@@ -999,7 +999,7 @@ class QB
                 return $result['updatedExisting'];
             }
             
-            return FALSE;
+            return false;
         } catch (MongoCursorException $exception) {
             throw new MongoQbException('Update of data into MongoDB failed: ' . $exception->getMessage());
         }
@@ -1032,7 +1032,7 @@ class QB
         }
                 
         try {
-            $options = array_merge(array($this->_query_safety => TRUE, 'multiple' => TRUE), $options);
+            $options = array_merge(array($this->_query_safety => true, 'multiple' => true), $options);
             $result = $this->_dbhandle->{$collection}->update($this->wheres, $this->updates, $options);
             $this->_clear($collection, 'update_all');
             
@@ -1040,7 +1040,7 @@ class QB
                 return $result['updatedExisting'];
             }
             
-            return FALSE;
+            return false;
         } catch (MongoCursorException $exception) {
             throw new MongoQbException('Update of data into MongoDB failed: ' . $exception->getMessage());
         }
@@ -1122,7 +1122,7 @@ class QB
      * @access public
      * @return object   
      */
-    public function set($fields, $value = NULL)
+    public function set($fields, $value = null)
     {
         $this->_updateInit('$set');
         
@@ -1323,9 +1323,9 @@ class QB
         }
         
         try {
-            $this->_dbhandle->{$collection}->remove($this->wheres, array($this->_query_safety => TRUE, 'justOne' => TRUE));
+            $this->_dbhandle->{$collection}->remove($this->wheres, array($this->_query_safety => true, 'justOne' => true));
             $this->_clear($collection, 'delete');
-            return TRUE;
+            return true;
         } catch (MongoCursorException $exception) {
             throw new MongoQbException('Delete of data into MongoDB failed: ' . $exception->getMessage());
         }
@@ -1356,9 +1356,9 @@ class QB
         }
         
         try {
-            $this->_dbhandle->{$collection}->remove($this->wheres, array($this->_query_safety => TRUE, 'justOne' => FALSE));
+            $this->_dbhandle->{$collection}->remove($this->wheres, array($this->_query_safety => true, 'justOne' => false));
             $this->_clear($collection, 'delete_all');
-            return TRUE;
+            return true;
         } catch (MongoCursorException $exception) {
             throw new MongoQbException('Delete of data into MongoDB failed: ' . $exception->getMessage());
         }   
@@ -1391,10 +1391,10 @@ class QB
     /**
      * Add indexes.
      *
-     * Ensure an index of the keys in a collection with optional parameters. To set values to descending order, you must pass values of either -1, FALSE, 'desc', or 'DESC', else they will be set to 1 (ASC).
+     * Ensure an index of the keys in a collection with optional parameters. To set values to descending order, you must pass values of either -1, false, 'desc', or 'DESC', else they will be set to 1 (ASC).
      *
      * <code>
-     * $mongoqb->add_index($collection, array('first_name' => 'ASC', 'last_name' => -1), array('unique' => TRUE));
+     * $mongoqb->add_index($collection, array('first_name' => 'ASC', 'last_name' => -1), array('unique' => true));
      * </code>
      *
      * @param string $collection Name of the collection
@@ -1415,14 +1415,14 @@ class QB
         }
 
         foreach ($fields as $field => $value) {
-            if($value === -1 OR $value === FALSE OR strtolower($value) === 'desc') {
+            if($value === -1 OR $value === false OR strtolower($value) === 'desc') {
                 $keys[$field] = -1; 
             } else {
                 $keys[$field] = 1;
             }
         }
         
-        if ($this->_dbhandle->{$collection}->ensureIndex($fields, $options) === TRUE) {
+        if ($this->_dbhandle->{$collection}->ensureIndex($fields, $options) === true) {
             $this->_clear($collection, 'add_index');
             return $this;
         } else {
@@ -1433,7 +1433,7 @@ class QB
     /**
      * Remove indexes.
      * 
-     * Remove an index of the keys in a collection. To set values to descending order, you must pass values of either -1, FALSE, 'desc', or 'DESC', else they will be set to 1 (ASC).
+     * Remove an index of the keys in a collection. To set values to descending order, you must pass values of either -1, false, 'desc', or 'DESC', else they will be set to 1 (ASC).
      * 
      * <code>
      * $mongoqb->remove_index($collection, array('first_name' => 'ASC', 'last_name' => -1));
@@ -1455,7 +1455,7 @@ class QB
             throw new MongoQbException('Index could not be removed from MongoDB Collection because no keys were specified');
         }
         
-        if ($this->_dbhandle->{$collection}->deleteIndex($keys, $options) === TRUE) {
+        if ($this->_dbhandle->{$collection}->deleteIndex($keys, $options) === true) {
             $this->_clear($collection, 'remove_index');
             return $this;
         } else {
@@ -1519,14 +1519,14 @@ class QB
      * $mongoqb->date($timestamp);
      * </code>
      *
-     * @param int|null $timestamp A unix timestamp (or NULL to return a MongoDate relative to time()
+     * @param int|null $timestamp A unix timestamp (or null to return a MongoDate relative to time()
      *
      * @access public
      * @return array|object
      */    
-    public function date($timestamp = NULL)
+    public function date($timestamp = null)
     {
-        if ($timestamp === NULL) {   
+        if ($timestamp === null) {   
             return new MongoDate();
         }
         
@@ -1619,11 +1619,11 @@ class QB
     {
         $options = array();
         
-        if ($this->_persist === TRUE) {
+        if ($this->_persist === true) {
             $options['persist'] = $this->_persist_key;
         }
         
-        if ($this->_replica_set !== FALSE) {
+        if ($this->_replica_set !== false) {
             $options['replicaSet'] = $this->_replica_set;
         }
         
@@ -1674,7 +1674,7 @@ class QB
         
         $connection_string .= $this->_host;
         
-        if ($dbhostflag === TRUE) {
+        if ($dbhostflag === true) {
             $this->_connectionString = trim($connection_string) . '/' . $this->_dbname;
         } else {
             $this->_connectionString = trim($connection_string);
