@@ -192,7 +192,7 @@ class QB
     {      
         if (is_array($config))
         {
-            $this->_config_data = $config;
+            $this->_configData = $config;
         }
         
         else
@@ -202,7 +202,7 @@ class QB
         
         if ($connect)
         {
-            $this->_connection_string();
+            $this->_connectionString();
             $this->_connect();
         }
     }
@@ -223,7 +223,7 @@ class QB
     {
         if (empty($database))
         {
-            $this->_show_error('To switch MongoDB databases, a new database name must be specified', 500);
+            throw new MongoQbException('To switch MongoDB databases, a new database name must be specified');
         }
         
         try
@@ -236,7 +236,7 @@ class QB
         
         catch (Exception $exception)
         {
-            $this->_show_error('Unable to switch Mongo Databases: ' . $exception->getMessage(), 500);
+            throw new MongoQbException('Unable to switch Mongo Databases: ' . $exception->getMessage());
         }
     }
 
@@ -777,7 +777,7 @@ class QB
     {
         if (empty($collection))
         {
-            $this->_show_error('In order to retrieve documents from MongoDB, a collection name must be passed', 500);
+            throw new MongoQbException('In order to retrieve documents from MongoDB, a collection name must be passed');
         }
 
         $cursor = $this->_dbhandle
@@ -807,7 +807,7 @@ class QB
             
             catch (MongoCursorException $exception)
             {
-                $this->_show_error($exception->getMessage(), 500);
+                throw new MongoQbException($exception->getMessage());
             }
         }
             
@@ -832,7 +832,7 @@ class QB
     {
         if (empty($collection))
         {
-            $this->_show_error('In order to retrieve a count of documents from MongoDB, a collection name must be passed', 500);
+            throw new MongoQbException('In order to retrieve a count of documents from MongoDB, a collection name must be passed');
         }
         
         $count = $this->_dbhandle
@@ -866,12 +866,12 @@ class QB
     {
         if (empty($collection))
         {
-            $this->_show_error('No Mongo collection selected to insert into', 500);
+            throw new MongoQbException('No Mongo collection selected to insert into');
         }
         
         if (count($insert) === 0 OR ! is_array($insert))
         {
-            $this->_show_error('Nothing to insert into Mongo collection or insert is not an array', 500);
+            throw new MongoQbException('Nothing to insert into Mongo collection or insert is not an array');
         }
         
         $options = array_merge(
@@ -900,7 +900,7 @@ class QB
         
         catch (MongoCursorException $exception)
         {
-            $this->_show_error('Insert of data into MongoDB failed: ' .$exception->getMessage(), 500);
+            throw new MongoQbException('Insert of data into MongoDB failed: ' .$exception->getMessage());
         }
     }
     
@@ -924,12 +924,12 @@ class QB
     {
         if (empty($collection))
         {
-            $this->_show_error('No Mongo collection selected to insert into', 500);
+            throw new MongoQbException('No Mongo collection selected to insert into');
         }
         
         if (count($insert) === 0 || ! is_array($insert))
         {
-            $this->_show_error('Nothing to insert into Mongo collection or insert is not an array', 500);
+            throw new MongoQbException('Nothing to insert into Mongo collection or insert is not an array');
         }
         
         $options = array_merge(
@@ -948,7 +948,7 @@ class QB
         
         catch (MongoCursorException $exception)
         {
-            $this->_show_error('Insert of data into MongoDB failed: ' . $exception->getMessage(), 500);
+            throw new MongoQbException('Insert of data into MongoDB failed: ' . $exception->getMessage());
         }
     }
     
@@ -971,12 +971,12 @@ class QB
     {
         if (empty($collection))
         {
-            $this->_show_error('No Mongo collection selected to update', 500);
+            throw new MongoQbException('No Mongo collection selected to update');
         }
         
         if (count($this->updates) === 0)
         {
-            $this->_show_error('Nothing to update in Mongo collection or update is not an array', 500); 
+            throw new MongoQbException('Nothing to update in Mongo collection or update is not an array'); 
         }
                 
         try
@@ -995,7 +995,7 @@ class QB
         
         catch (MongoCursorException $exception)
         {
-            $this->_show_error('Update of data into MongoDB failed: ' . $exception->getMessage(), 500);
+            throw new MongoQbException('Update of data into MongoDB failed: ' . $exception->getMessage());
         }
     }
     
@@ -1019,12 +1019,12 @@ class QB
     {
         if (empty($collection))
         {
-            $this->_show_error('No Mongo collection selected to update', 500);
+            throw new MongoQbException('No Mongo collection selected to update');
         }
         
         if (count($this->updates) === 0)
         {
-            $this->_show_error('Nothing to update in Mongo collection or update is not an array', 500); 
+            throw new MongoQbException('Nothing to update in Mongo collection or update is not an array'); 
         }
                 
         try
@@ -1043,7 +1043,7 @@ class QB
         
         catch (MongoCursorException $exception)
         {
-            $this->_show_error('Update of data into MongoDB failed: ' . $exception->getMessage(), 500);
+            throw new MongoQbException('Update of data into MongoDB failed: ' . $exception->getMessage());
         }
     }
     
@@ -1064,7 +1064,7 @@ class QB
      */ 
     public function inc($fields = array(), $value = 0)
     {
-        $this->_updateInit('$inc');
+        $this->_updateInit§('$inc');
         
         if (is_string($fields))
         {
@@ -1355,7 +1355,7 @@ class QB
     {
         if (empty($collection))
         {
-            $this->_show_error('No Mongo collection selected to delete from', 500);
+            throw new MongoQbException('No Mongo collection selected to delete from');
         }
         
         try
@@ -1367,7 +1367,7 @@ class QB
         
         catch (MongoCursorException $exception)
         {
-            $this->_show_error('Delete of data into MongoDB failed: ' . $exception->getMessage(), 500);
+            throw new MongoQbException('Delete of data into MongoDB failed: ' . $exception->getMessage());
         }
     }
     
@@ -1389,7 +1389,7 @@ class QB
     {
         if (empty($collection))
         {
-            $this->_show_error('No Mongo collection selected to delete from', 500);
+            throw new MongoQbException('No Mongo collection selected to delete from');
         }
         
         if (isset($this->wheres['_id']) AND ! ($this->wheres['_id'] instanceof MongoId))
@@ -1406,7 +1406,7 @@ class QB
         
         catch (MongoCursorException $exception)
         {
-            $this->_show_error('Delete of data into MongoDB failed: ' . $exception->getMessage(), 500);
+            throw new MongoQbException('Delete of data into MongoDB failed: ' . $exception->getMessage());
         }   
     }
     
@@ -1434,7 +1434,7 @@ class QB
         
         catch (MongoCursorException $exception)
         {
-            $this->_show_error('MongoDB command failed to execute: ' . $exception->getMessage(), 500);
+            throw new MongoQbException('MongoDB command failed to execute: ' . $exception->getMessage());
         }
     }
     
@@ -1458,12 +1458,12 @@ class QB
     {
         if (empty($collection))
         {
-            $this->_show_error('No Mongo collection specified to add index to', 500);
+            throw new MongoQbException('No Mongo collection specified to add index to');
         }
         
         if (empty($fields) OR ! is_array($fields))
         {
-            $this->_show_error('Index could not be created to MongoDB Collection because no keys were specified', 500);
+            throw new MongoQbException('Index could not be created to MongoDB Collection because no keys were specified');
         }
 
         foreach ($fields as $field => $value)
@@ -1486,7 +1486,7 @@ class QB
         
         else
         {
-            $this->_show_error('An error occurred when trying to add an index to MongoDB Collection', 500);
+            throw new MongoQbException('An error occurred when trying to add an index to MongoDB Collection');
         }
     }
     
@@ -1509,12 +1509,12 @@ class QB
     {
         if (empty($collection))
         {
-            $this->_show_error('No Mongo collection specified to remove index from', 500);
+            throw new MongoQbException('No Mongo collection specified to remove index from');
         }
         
         if (empty($keys) OR ! is_array($keys))
         {
-            $this->_show_error('Index could not be removed from MongoDB Collection because no keys were specified', 500);
+            throw new MongoQbException('Index could not be removed from MongoDB Collection because no keys were specified');
         }
         
         if ($this->_dbhandle->{$collection}->deleteIndex($keys, $options) === TRUE)
@@ -1524,7 +1524,7 @@ class QB
         }
         else
         {
-            $this->_show_error('An error occurred when trying to remove an index from MongoDB Collection', 500);
+            throw new MongoQbException('An error occurred when trying to remove an index from MongoDB Collection');
         }
     }
     
@@ -1546,7 +1546,7 @@ class QB
     {
         if (empty($collection))
         {
-            $this->_show_error('No Mongo collection specified to remove all indexes from', 500);
+            throw new MongoQbException('No Mongo collection specified to remove all indexes from');
         }
         $this->_dbhandle->{$collection}->deleteIndexes();
         $this->_clear($collection, 'remove_all_indexes');
@@ -1571,7 +1571,7 @@ class QB
     {
         if (empty($collection))
         {
-            $this->_show_error('No Mongo collection specified to remove all indexes from', 500);
+            throw new MongoQbException('No Mongo collection specified to remove all indexes from');
         }
         
         return $this->_dbhandle->{$collection}->getIndexInfo();
@@ -1619,7 +1619,7 @@ class QB
     {
         if (empty($object) || ! isset($object))
         {
-            $this->_show_error('To use MongoDBRef::get() ala get_dbref() you must pass a valid reference object', 500);
+            throw new MongoQbException('To use MongoDBRef::get() ala get_dbref() you must pass a valid reference object');
         }
         
             return MongoDBRef::get($this->_dbhandle, $object);
@@ -1645,12 +1645,12 @@ class QB
     {
         if (empty($collection))
         {
-            $this->_show_error('In order to retrieve documents from MongoDB, a collection name must be passed', 500);
+            throw new MongoQbException('In order to retrieve documents from MongoDB, a collection name must be passed');
         }
         
         if (empty($field) || ! isset($field))
         {
-            $this->_show_error('To use MongoDBRef::create() ala create_dbref() you must pass a valid field id of the object which to link', 500);
+            throw new MongoQbException('To use MongoDBRef::create() ala create_dbref() you must pass a valid field id of the object which to link');
         }
         
         $database = ($db_name !== '') ? $db_name : $this->_dbhandle;
@@ -1702,19 +1702,19 @@ class QB
         
         try
         {
-            $this->_connection = new Mongo($this->_connection_string, $options);
+            $this->_connection = new Mongo($this->_connectionString, $options);
             $this->_dbhandle = $this->_connection->{$this->_dbname};
             return $this;   
         } 
         catch (MongoConnectionException $exception)
         {
-            if($this->_config_data['mongo_suppress_connect_error'])
+            if($this->_configData['mongo_suppress_connect_error'])
             {
-                $this->_show_error('Unable to connect to MongoDB', 500);
+                throw new MongoQbException('Unable to connect to MongoDB');
             }
             else
             {
-                $this->_show_error('Unable to connect to MongoDB: ' . $exception->getMessage(), 500);
+                throw new MongoQbException('Unable to connect to MongoDB: ' . $exception->getMessage());
             }
         }
     }
@@ -1727,26 +1727,26 @@ class QB
      */
     private function _connectionString() 
     {       
-        $this->_host = trim($this->_config_data['mongo_hostbase']);
-        $this->_user = trim($this->_config_data['mongo_username']);
-        $this->_pass = trim($this->_config_data['mongo_password']);
-        $this->_dbname = trim($this->_config_data['mongo_database']);
-        $this->_persist = $this->_config_data['mongo_persist'];
-        $this->_persist_key = trim($this->_config_data['mongo_persist_key']);
-        $this->_replica_set = $this->_config_data['mongo_replica_set'];
-        $this->_query_safety = trim($this->_config_data['mongo_query_safety']);
-        $dbhostflag = (bool) $this->_config_data['mongo_host_db_flag'];
+        $this->_host = trim($this->_configData['mongo_hostbase']);
+        $this->_user = trim($this->_configData['mongo_username']);
+        $this->_pass = trim($this->_configData['mongo_password']);
+        $this->_dbname = trim($this->_configData['mongo_database']);
+        $this->_persist = $this->_configData['mongo_persist'];
+        $this->_persist_key = trim($this->_configData['mongo_persist_key']);
+        $this->_replica_set = $this->_configData['mongo_replica_set'];
+        $this->_query_safety = trim($this->_configData['mongo_query_safety']);
+        $dbhostflag = (bool) $this->_configData['mongo_host_db_flag'];
         
         $connection_string = 'mongodb://';
                 
         if (empty($this->_host))
         {
-            $this->_show_error('The Host must be set to connect to MongoDB', 500);
+            throw new MongoQbException('The Host must be set to connect to MongoDB');
         }
         
         if (empty($this->_dbname))
         {
-            $this->_show_error('The database name must be set to connect to MongoDB', 500);
+            throw new MongoQbException('The database name must be set to connect to MongoDB');
         }
         
         if ( ! empty($this->_user) AND ! empty($this->_pass))
@@ -1758,12 +1758,12 @@ class QB
         
         if ($dbhostflag === TRUE)
         {
-            $this->_connection_string = trim($connection_string) . '/' . $this->_dbname;
+            $this->_connectionString = trim($connection_string) . '/' . $this->_dbname;
         }
         
         else
         {
-            $this->_connection_string = trim($connection_string);
+            $this->_connectionString = trim($connection_string);
         }
     }
     
