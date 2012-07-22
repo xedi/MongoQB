@@ -166,7 +166,8 @@ class QB
     /**
      * Constructor
      * 
-     * Automatically check if the Mongo PECL extension has been installed/enabled.
+     * Automatically check if the Mongo PECL extension has been
+     *  installed/enabled.
      *
      * @access public
      * @return void
@@ -174,7 +175,8 @@ class QB
     public function __construct(array $config, $connect = true)
     {
         if ( ! class_exists('Mongo')) {
-            throw new MongoQbException('The MongoDB PECL extension has not been installed or enabled');
+            throw new MongoQbException('The MongoDB PECL extension has not been
+             installed or enabled');
         }
         
         $this->setConfig($config, $connect);
@@ -217,7 +219,8 @@ class QB
     public function switchDb($database = '')
     {
         if (empty($database)) {
-            throw new MongoQbException('To switch MongoDB databases, a new database name must be specified');
+            throw new MongoQbException('To switch MongoDB databases, a new
+             database name must be specified');
         }
         
         try {
@@ -226,7 +229,8 @@ class QB
             $this->_connectionString();
             $this->_connect();
         } catch (Exception $exception) {
-            throw new MongoQbException('Unable to switch Mongo Databases: ' . $exception->getMessage());
+            throw new MongoQbException('Unable to switch Mongo Databases: ' .
+             $exception->getMessage());
         }
     }
 
@@ -242,24 +246,20 @@ class QB
     * @access public
     * @return boolean
     */
-    public function drop_db($database = '')
+    public function dropDb($database = '')
     {
-        if (empty($database))
-        {
-            $this->_show_error('Failed to drop MongoDB database because name is empty', 500);
-        }
-        
-        else
-        {
-            try
-            {
+        if (empty($database)) {
+
+           throw new MongoQbException('Failed to drop MongoDB database because
+            name is empty');
+
+        } else {
+            try {
                 $this->_connection->{$database}->drop();
                 return true;
-            }
-
-            catch (Exception $exception)
-            {
-                $this->_show_error('Unable to drop Mongo database `' . $database . '`: ' . $exception->getMessage(), 500);
+            } catch (Exception $exception) {
+                throw new MongoQbException('Unable to drop Mongo database `' .
+                 $database . '`: ' . $exception->getMessage());
             }
             
         }
@@ -283,12 +283,14 @@ class QB
     {
         if (empty($database))
         {
-            $this->_show_error('Failed to drop MongoDB collection because database name is empty', 500);
+            $this->_show_error('Failed to drop MongoDB collection because
+             database name is empty', 500);
         }
     
         if (empty($collection))
         {
-            $this->_show_error('Failed to drop MongoDB collection because collection name is empty', 500);
+            $this->_show_error('Failed to drop MongoDB collection because
+             collection name is empty', 500);
         }
         
         else
@@ -301,7 +303,8 @@ class QB
             
             catch (Exception $exception)
             {
-                $this->_show_error('Unable to drop Mongo collection `' . $collection . '`: ' . $exception->getMessage(), 500);
+                $this->_show_error('Unable to drop Mongo collection `' .
+                 $collection . '`: ' . $exception->getMessage(), 500);
             }
         }
     }
@@ -309,10 +312,11 @@ class QB
     /**
      * Set select parameters.
      * 
-     * Determine which fields to include OR which to exclude during the query process.
-     * Currently, including and excluding at the same time is not available, so the 
-     * $includes array will take precedence over the $excludes array.  If you want to 
-     * only choose fields to exclude, leave $includes an empty array().
+     * Determine which fields to include OR which to exclude during the query
+     *  process. Currently, including and excluding at the same time is not
+     *  available, so the $includes array will take precedence over the
+     *  $excludes array.  If you want to only choose fields to exclude, leave
+     *  $includes an empty array().
      * 
      * <code>
      * $mongoqb->select(array('foo', 'bar'))->get('foobar');
@@ -350,15 +354,16 @@ class QB
     /**
      * Set where paramaters
      *
-     * Get the documents based on these search parameters.  The $wheres array should 
-     * be an associative array with the field as the key and the value as the search
-     * criteria.
+     * Get the documents based on these search parameters.  The $wheres array
+     *  should be an associative array with the field as the key and the value
+     *  as the search criteria.
      *
      * <code>
      * $mongoqb->where(array('foo' => 'bar'))->get('foobar');
      * </code>
      *
-     * @param array|string $wheres Array of where conditions. If string, $value must be set
+     * @param array|string $wheres Array of where conditions. If string, $value
+     *  must be set
      * @param mixed        $value  Value of $wheres if $wheres is a string
      *
      * @access public
@@ -394,7 +399,8 @@ class QB
     public function orWhere($wheres = array())
     {
         if (count($wheres) > 0) {
-            if ( ! isset($this->wheres['$or']) OR ! is_array($this->wheres['$or'])) {
+            if ( ! isset($this->wheres['$or']) OR !
+             is_array($this->wheres['$or'])) {
                 $this->wheres['$or'] = array();
             }
             
@@ -430,10 +436,11 @@ class QB
     /**
      * where_in_all.
      * 
-     * Get the documents where the value of a $field is in all of a given $in array().
+     * Get the documents where the value of a $field is in all of a given $in
+     *  array().
      * 
      * <code>
-     * $mongoqb->where_in_all('foo', array('bar', 'zoo', 'blah'))->get('foobar');
+     * $mongoqb->where_in_all('foo', array('bar', 'zoo', 'blah'))->get('foobar')
      * </code>
      *
      * @param string $field     Name of the field
@@ -452,10 +459,11 @@ class QB
     /**
      * Where not in
      * 
-     * Get the documents where the value of a $field is not in a given $in array().
+     * Get the documents where the value of a $field is not in a given $in
+     *  array().
      * 
      * <code>
-     * $mongoqb->where_not_in('foo', array('bar', 'zoo', 'blah'))->get('foobar');
+     * $mongoqb->where_not_in('foo', array('bar', 'zoo', 'blah'))->get('foobar')
      * </code>
      *
      * @param string $field     Name of the field
@@ -496,7 +504,8 @@ class QB
     /**
      * where_gte
      * 
-     * Get the documents where the value of a $field is greater than or equal to $value
+     * Get the documents where the value of a $field is greater than or equal to
+     *  $value
      * 
      * <code>
      * $mongoqb->where_gte('foo', 20);
@@ -586,7 +595,8 @@ class QB
     /**
      * where_between_ne
      * 
-     * Get the documents where the value of a $field is between but not equal to $x and $y
+     * Get the documents where the value of a $field is between but not equal to
+     *  $x and $y
      * 
      * <code>
      * $mongoqb->where_between_ne('foo', 20, 30);
@@ -632,7 +642,8 @@ class QB
     /**
      * where_near
      * 
-     * Get the documents nearest to an array of coordinates (your collection must have a geospatial index)
+     * Get the documents nearest to an array of coordinates (your collection
+     *  must have a geospatial index)
      * 
      * <code>
      * $mongoqb->where_near('foo', array('50','50'))->get('foobar');
@@ -641,12 +652,14 @@ class QB
      * @param string  $field     Name of the field
      * @param array   $coords    Array of coordinates
      * @param integer $distance  Value of the maximum distance to search
-     * @param boolean $spherical Treat the Earth as spherical instead of flat (useful when searching over large distances)
+     * @param boolean $spherical Treat the Earth as spherical instead of flat
+     *  (useful when searching over large distances)
      *
      * @access public
      * @return object
      */
-    function whereNear($field = '', $coords = array(), $distance = null, $spherical = false)
+    function whereNear($field = '', $coords = array(), $distance = null,
+     $spherical = false)
     {
         $this->_whereInit($field);
         
@@ -666,7 +679,8 @@ class QB
     /**
      * like
      * 
-     * Get the documents where the (string) value of a $field is like a value. The defaults
+     * Get the documents where the (string) value of a $field is like a value.
+     *  The defaults
      * allow for a case-insensitive search.
      *
      * <code>
@@ -675,14 +689,22 @@ class QB
      *
      * @param string  $field                 The field
      * @param string  $value                 The value to match against
-     * @param string  $flags                 Allows for the typical regular expression flags:<br>i = case insensitive<br>m = multiline<br>x = can contain comments<br>l = locale<br>s = dotall, "." matches everything, including newlines<br>u = match unicode
-     * @param boolean $enable_start_wildcard If set to anything other than true, a starting line character "^" will be prepended to the search value, representing only searching for a value at the start of a new line.
-     * @param boolean $enable_end_wildcard   If set to anything other than true, an ending line character "$" will be appended to the search value, representing only searching for a value at the end of a line.
+     * @param string  $flags                 Allows for the typical regular
+     *  expression flags:<br>i = case insensitive<br>m = multiline<br>x = can
+     *  contain comments<br>l = locale<br>s = dotall, "." matches everything,
+     *  including newlines<br>u = match unicode
+     * @param boolean $enable_start_wildcard If set to anything other than true,
+     *  a starting line character "^" will be prepended to the search value,
+     *  representing only searching for a value at the start of a new line.
+     * @param boolean $enable_end_wildcard   If set to anything other than true,
+     *  an ending line character "$" will be appended to the search value,
+     *  representing only searching for a value at the end of a line.
      *
      * @access public
      * @return object
      */
-    public function like($field = '', $value = '', $flags = 'i', $enable_start_wildcard = true, $enable_end_wildcard = true)
+    public function like($field = '', $value = '', $flags = 'i',
+     $enable_start_wildcard = true, $enable_end_wildcard = true)
     {
         $field = (string) trim($field);
         $this->_whereInit($field);
@@ -705,7 +727,9 @@ class QB
     /**
      * order_by
      *
-     * Sort the documents based on the parameters passed. To set values to descending order, you must pass values of either -1, false, 'desc', or 'DESC', else they will be set to 1 (ASC).
+     * Sort the documents based on the parameters passed. To set values to
+     *  descending order, you must pass values of either -1, false, 'desc', or
+     *  'DESC', else they will be set to 1 (ASC).
      *
      * <code>
      * $mongoqb->order_by(array('foo' => 'ASC'))->get('foobar');
@@ -719,7 +743,8 @@ class QB
     public function orderBy($fields = array())
     {
         foreach ($fields as $field => $order) {
-            if ($order === -1 OR $order === false OR strtolower($order) === 'desc') {
+            if ($order === -1 OR $order === false OR strtolower($order) ===
+             'desc') {
                 $this->_sorts[$field] = -1; 
             } else {
                 $this->_sorts[$field] = 1;
@@ -813,7 +838,8 @@ class QB
     public function get($collection = '', $return_cursor = false)
     {
         if (empty($collection)) {
-            throw new MongoQbException('In order to retrieve documents from MongoDB, a collection name must be passed');
+            throw new MongoQbException('In order to retrieve documents from
+             MongoDB, a collection name must be passed');
         }
 
         $cursor = $this->_dbhandle
@@ -861,7 +887,8 @@ class QB
     public function count($collection = '')
     {
         if (empty($collection)) {
-            throw new MongoQbException('In order to retrieve a count of documents from MongoDB, a collection name must be passed');
+            throw new MongoQbException('In order to retrieve a count of
+             documents from MongoDB, a collection name must be passed');
         }
         
         $count = $this->_dbhandle
@@ -891,14 +918,17 @@ class QB
      * @access public
      * @return boolean
      */
-    public function insert($collection = '', $insert = array(), $options = array())
+    public function insert($collection = '', $insert = array(),
+     $options = array())
     {
         if (empty($collection)) {
-            throw new MongoQbException('No Mongo collection selected to insert into');
+            throw new MongoQbException('No Mongo collection selected to insert
+             into');
         }
         
         if (count($insert) === 0 OR ! is_array($insert)) {
-            throw new MongoQbException('Nothing to insert into Mongo collection or insert is not an array');
+            throw new MongoQbException('Nothing to insert into Mongo collection
+             or insert is not an array');
         }
         
         $options = array_merge(
@@ -919,7 +949,8 @@ class QB
                 return false;
             }
         } catch (MongoCursorException $exception) {
-            throw new MongoQbException('Insert of data into MongoDB failed: ' .$exception->getMessage());
+            throw new MongoQbException('Insert of data into MongoDB failed: ' .
+             $exception->getMessage());
         }
     }
     
@@ -939,14 +970,17 @@ class QB
      * @access public
      * @return boolean
      */
-    public function batchInsert($collection = '', $insert = array(), $options = array())
+    public function batchInsert($collection = '', $insert = array(),
+     $options = array())
     {
         if (empty($collection)) {
-            throw new MongoQbException('No Mongo collection selected to insert into');
+            throw new MongoQbException('No Mongo collection selected to insert
+             into');
         }
         
         if (count($insert) === 0 || ! is_array($insert)) {
-            throw new MongoQbException('Nothing to insert into Mongo collection or insert is not an array');
+            throw new MongoQbException('Nothing to insert into Mongo collection
+             or insert is not an array');
         }
         
         $options = array_merge(
@@ -961,7 +995,8 @@ class QB
                             ->{$collection}
                             ->batchInsert($insert, $options);           
         } catch (MongoCursorException $exception) {
-            throw new MongoQbException('Insert of data into MongoDB failed: ' . $exception->getMessage());
+            throw new MongoQbException('Insert of data into MongoDB failed: ' .
+             $exception->getMessage());
         }
     }
     
@@ -983,16 +1018,20 @@ class QB
     public function update($collection = '', $options = array())
     {
         if (empty($collection)) {
-            throw new MongoQbException('No Mongo collection selected to update');
+            throw new MongoQbException('No Mongo collection selected to
+             update');
         }
         
         if (count($this->updates) === 0) {
-            throw new MongoQbException('Nothing to update in Mongo collection or update is not an array'); 
+            throw new MongoQbException('Nothing to update in Mongo collection or
+             update is not an array'); 
         }
                 
         try {
-            $options = array_merge(array($this->_query_safety => true, 'multiple' => false), $options);
-            $result = $this->_dbhandle->{$collection}->update($this->wheres, $this->updates, $options);
+            $options = array_merge(array($this->_query_safety => true,
+             'multiple' => false), $options);
+            $result = $this->_dbhandle->{$collection}->update($this->wheres,
+             $this->updates, $options);
             $this->_clear($collection, 'update');
             
             if ($result['updatedExisting'] > 0) {
@@ -1001,7 +1040,8 @@ class QB
             
             return false;
         } catch (MongoCursorException $exception) {
-            throw new MongoQbException('Update of data into MongoDB failed: ' . $exception->getMessage());
+            throw new MongoQbException('Update of data into MongoDB failed: ' .
+             $exception->getMessage());
         }
     }
     
@@ -1024,16 +1064,20 @@ class QB
     public function updateAll($collection = '', $options = array())
     {
         if (empty($collection)) {
-            throw new MongoQbException('No Mongo collection selected to update');
+            throw new MongoQbException('No Mongo collection selected to
+             update');
         }
         
         if (count($this->updates) === 0) {
-            throw new MongoQbException('Nothing to update in Mongo collection or update is not an array'); 
+            throw new MongoQbException('Nothing to update in Mongo collection or
+             update is not an array'); 
         }
                 
         try {
-            $options = array_merge(array($this->_query_safety => true, 'multiple' => true), $options);
-            $result = $this->_dbhandle->{$collection}->update($this->wheres, $this->updates, $options);
+            $options = array_merge(array($this->_query_safety => true,
+             'multiple' => true), $options);
+            $result = $this->_dbhandle->{$collection}->update($this->wheres,
+             $this->updates, $options);
             $this->_clear($collection, 'update_all');
             
             if ($result['updatedExisting'] > 0) {
@@ -1042,7 +1086,8 @@ class QB
             
             return false;
         } catch (MongoCursorException $exception) {
-            throw new MongoQbException('Update of data into MongoDB failed: ' . $exception->getMessage());
+            throw new MongoQbException('Update of data into MongoDB failed: ' .
+             $exception->getMessage());
         }
     }
     
@@ -1052,11 +1097,14 @@ class QB
      * Increments the value of a field
      *
      * <code>
-     * $mongoqb->where(array('blog_id'=>123))->inc(array('num_comments' => 1))->update('blog_posts');
+     * $mongoqb->where(array('blog_id'=>123))->inc(array('num_comments' => 1))
+     *  ->update('blog_posts');
      * </code>
      *
-     * @param array|string $fields Array of field names (or a single string field name) to be incremented
-     * @param int          $value  Value that the field(s) should be incremented by
+     * @param array|string $fields Array of field names (or a single string
+     *  field name) to be incremented
+     * @param int          $value  Value that the field(s) should be incremented
+     *  by
      *
      * @access public
      * @return object
@@ -1082,11 +1130,14 @@ class QB
      * Decrements the value of a field
      *
      * <code>
-     * $mongoqb->where(array('blog_id'=>123))->dec(array('num_comments' => 1))->update('blog_posts');
+     * $mongoqb->where(array('blog_id'=>123))->dec(array('num_comments' => 1))
+     *  ->update('blog_posts');
      * </code>
      *
-     * @param array|string $fields Array of field names (or a single string field name) to be decremented
-     * @param int          $value  Value that the field(s) should be decremented by
+     * @param array|string $fields Array of field names (or a single string
+     *  field name) to be decremented
+     * @param int          $value  Value that the field(s) should be decremented
+     *  by
      *
      * @access public
      * @return object
@@ -1112,11 +1163,14 @@ class QB
      * Sets a field to a value
      *
      * <code>
-     * $mongoqb->where(array('blog_id'=>123))->set('posted', 1)->update('blog_posts');
-     * $mongoqb->where(array('blog_id'=>123))->set(array('posted' => 1, 'time' => time()))->update('blog_posts');
+     * $mongoqb->where(array('blog_id'=>123))->set('posted', 1)
+     *  ->update('blog_posts');
+     * $mongoqb->where(array('blog_id'=>123))->set(array('posted' => 1,
+     *  'time' => time()))->update('blog_posts');
      * </code>
      *
-     * @param array|string $fields Array of field names (or a single string field name)
+     * @param array|string $fields Array of field names (or a single string
+     *  field name)
      * @param mixed        $value  Value that the field(s) should be set to 
      *
      * @access public
@@ -1143,10 +1197,13 @@ class QB
      * Unsets a field (or fields)
      * 
      * <code>
-     * $mongoqb->where(array('blog_id'=>123))->unset('posted')->update('blog_posts');
-     * $mongoqb->where(array('blog_id'=>123))->set(array('posted','time'))->update('blog_posts');
+     * $mongoqb->where(array('blog_id'=>123))->unset('posted')
+     *  ->update('blog_posts');
+     * $mongoqb->where(array('blog_id'=>123))->set(array('posted','time'))
+     *  ->update('blog_posts');
      * 
-     * @param array|string $fields Array of field names (or a single string field name) to be unset
+     * @param array|string $fields Array of field names (or a single string
+     *  field name) to be unset
      *
      * @access public
      * @return object   
@@ -1172,8 +1229,10 @@ class QB
      * Adds value to the array only if its not in the array already
      *
      * <code>
-     * $mongoqb->where(array('blog_id'=>123))->addtoset('tags', 'php')->update('blog_posts');
-     * $mongoqb->where(array('blog_id'=>123))->addtoset('tags', array('php', 'codeigniter', 'mongodb'))->update('blog_posts');
+     * $mongoqb->where(array('blog_id'=>123))->addtoset('tags', 'php')
+     *  ->update('blog_posts');
+     * $mongoqb->where(array('blog_id'=>123))->addtoset('tags', array('php',
+     *  'codeigniter', 'mongodb'))->update('blog_posts');
      * </code>
      *
      * @param string       $field  Name of the field
@@ -1201,12 +1260,17 @@ class QB
      * Pushes values into a field (field must be an array)
      *
      * <code>
-     * $mongoqb->where(array('blog_id'=>123))->push('comments', array('text'=>'Hello world'))->update('blog_posts');
-     * $mongoqb->where(array('blog_id'=>123))->push(array('comments' => array('text'=>'Hello world')), 'viewed_by' => array('Alex')->update('blog_posts');
+     * $mongoqb->where(array('blog_id'=>123))->push('comments', array('text' =>
+     *  'Hello world'))->update('blog_posts');
+     * $mongoqb->where(array('blog_id'=>123))->push(array('comments' =>
+     *  array('text' => 'Hello world')), 'viewed_by' => array('Alex')
+     *  ->update('blog_posts');
      * </code>
      *
-     * @param array|string $fields Array of field names (or a single string field name)
-     * @param mixed        $value  Value of the field(s) to be pushed into an array or object
+     * @param array|string $fields Array of field names (or a single string
+     *  field name)
+     * @param mixed        $value  Value of the field(s) to be pushed into an
+     *  array or object
      *
      * @access public
      * @return object   
@@ -1232,8 +1296,10 @@ class QB
      * Pops the last value from a field (field must be an array)
      * 
      * <code>
-     * $mongoqb->where(array('blog_id'=>123))->pop('comments')->update('blog_posts');
-     * $mongoqb->where(array('blog_id'=>123))->pop(array('comments', 'viewed_by'))->update('blog_posts');
+     * $mongoqb->where(array('blog_id'=>123))->pop('comments')
+     * ->update('blog_posts');
+     * $mongoqb->where(array('blog_id'=>123))->pop(array('comments',
+     *  'viewed_by'))->update('blog_posts');
      * </code>
      *
      * @param string $field Name of the field to be popped
@@ -1262,7 +1328,8 @@ class QB
      * Removes by an array by the value of a field
      *
      * <code>
-     * $mongoqb->pull('comments', array('comment_id'=>123))->update('blog_posts');
+     * $mongoqb->pull('comments', array('comment_id'=>123))
+     * ->update('blog_posts');
      * </code>
      *
      * @param string $field Name of the field
@@ -1286,7 +1353,8 @@ class QB
      * Renames a field
      *
      * <code>
-     * $mongoqb->where(array('blog_id'=>123))->rename_field('posted_by', 'author')->update('blog_posts');
+     * $mongoqb->where(array('blog_id'=>123))->rename_field('posted_by',
+     *  'author')->update('blog_posts');
      * </code>
      *
      * @param string $old_name Name of the field to be renamed
@@ -1319,22 +1387,26 @@ class QB
     public function delete($collection = '')
     {
         if (empty($collection)) {
-            throw new MongoQbException('No Mongo collection selected to delete from');
+            throw new MongoQbException('No Mongo collection selected to delete
+             from');
         }
         
         try {
-            $this->_dbhandle->{$collection}->remove($this->wheres, array($this->_query_safety => true, 'justOne' => true));
+            $this->_dbhandle->{$collection}->remove($this->wheres,
+             array($this->_query_safety => true, 'justOne' => true));
             $this->_clear($collection, 'delete');
             return true;
         } catch (MongoCursorException $exception) {
-            throw new MongoQbException('Delete of data into MongoDB failed: ' . $exception->getMessage());
+            throw new MongoQbException('Delete of data into MongoDB failed: ' .
+             $exception->getMessage());
         }
     }
     
     /**
      * Delete all.
      *
-     * Delete all documents from the passed collection based upon certain criteria
+     * Delete all documents from the passed collection based upon certain
+     *  criteria
      *
      * <code>
      * $mongoqb->delete_all('foo', $data = array());
@@ -1348,29 +1420,35 @@ class QB
     public function deleteAll($collection = '')
     {
         if (empty($collection)) {
-            throw new MongoQbException('No Mongo collection selected to delete from');
+            throw new MongoQbException('No Mongo collection selected to delete
+             from');
         }
         
-        if (isset($this->wheres['_id']) AND ! ($this->wheres['_id'] instanceof MongoId)) {
+        if (isset($this->wheres['_id']) AND
+         ! ($this->wheres['_id'] instanceof MongoId)) {
             $this->wheres['_id'] = new MongoId($this->wheres['_id']);
         }
         
         try {
-            $this->_dbhandle->{$collection}->remove($this->wheres, array($this->_query_safety => true, 'justOne' => false));
+            $this->_dbhandle->{$collection}->remove($this->wheres,
+             array($this->_query_safety => true, 'justOne' => false));
             $this->_clear($collection, 'delete_all');
             return true;
         } catch (MongoCursorException $exception) {
-            throw new MongoQbException('Delete of data into MongoDB failed: ' . $exception->getMessage());
+            throw new MongoQbException('Delete of data into MongoDB failed: ' .
+             $exception->getMessage());
         }   
     }
     
     /**
      * Command.
      * 
-     * Runs a MongoDB command (such as GeoNear). See the MongoDB documentation for more usage scenarios - http://dochub.mongodb.org/core/commands
+     * Runs a MongoDB command (such as GeoNear). See the MongoDB documentation
+     *  for more usage scenarios - http://dochub.mongodb.org/core/commands
      *
      * <code>
-     * $mongoqb->command(array('geoNear'=>'buildings', 'near'=>array(53.228482, -0.547847), 'num' => 10, 'nearSphere'=>true));
+     * $mongoqb->command(array('geoNear'=>'buildings', 'near' =>
+     *  array(53.228482, -0.547847), 'num' => 10, 'nearSphere'=>true));
      * </code>
      *
      * @param array $query The command query
@@ -1384,63 +1462,78 @@ class QB
             $execute = $this->_dbhandle->command($query);
             return $execute;
         } catch (MongoCursorException $exception) {
-            throw new MongoQbException('MongoDB command failed to execute: ' . $exception->getMessage());
+            throw new MongoQbException('MongoDB command failed to execute: ' .
+             $exception->getMessage());
         }
     }
     
     /**
      * Add indexes.
      *
-     * Ensure an index of the keys in a collection with optional parameters. To set values to descending order, you must pass values of either -1, false, 'desc', or 'DESC', else they will be set to 1 (ASC).
+     * Ensure an index of the keys in a collection with optional parameters.
+     *  To set values to descending order, you must pass values of either -1,
+     *  false, 'desc', or 'DESC', else they will be set to 1 (ASC).
      *
      * <code>
-     * $mongoqb->add_index($collection, array('first_name' => 'ASC', 'last_name' => -1), array('unique' => true));
+     * $mongoqb->add_index($collection, array('first_name' => 'ASC',
+     *  'last_name' => -1), array('unique' => true));
      * </code>
      *
      * @param string $collection Name of the collection
-     * @param array  $fields     Array of fields to be indexed. Key should be the field name, value should be index type
+     * @param array  $fields     Array of fields to be indexed. Key should be
+     *  the field name, value should be index type
      * @param array  $options    Array of options
      *
      * @access public
      * @return object
      */ 
-    public function addIndex($collection = '', $fields = array(), $options = array())
+    public function addIndex($collection = '', $fields = array(),
+     $options = array())
     {
         if (empty($collection)) {
-            throw new MongoQbException('No Mongo collection specified to add index to');
+            throw new MongoQbException('No Mongo collection specified to add
+             index to');
         }
         
         if (empty($fields) OR ! is_array($fields)) {
-            throw new MongoQbException('Index could not be created to MongoDB Collection because no keys were specified');
+            throw new MongoQbException('Index could not be created to MongoDB
+             Collection because no keys were specified');
         }
 
         foreach ($fields as $field => $value) {
-            if($value === -1 OR $value === false OR strtolower($value) === 'desc') {
+            if($value === -1 OR $value === false OR
+             strtolower($value) === 'desc') {
                 $keys[$field] = -1; 
             } else {
                 $keys[$field] = 1;
             }
         }
         
-        if ($this->_dbhandle->{$collection}->ensureIndex($fields, $options) === true) {
+        if ($this->_dbhandle->{$collection}->ensureIndex($fields, $options)
+         === true) {
             $this->_clear($collection, 'add_index');
             return $this;
         } else {
-            throw new MongoQbException('An error occurred when trying to add an index to MongoDB Collection');
+            throw new MongoQbException('An error occurred when trying to add an
+             index to MongoDB Collection');
         }
     }
     
     /**
      * Remove indexes.
      * 
-     * Remove an index of the keys in a collection. To set values to descending order, you must pass values of either -1, false, 'desc', or 'DESC', else they will be set to 1 (ASC).
+     * Remove an index of the keys in a collection. To set values to descending
+     *  order, you must pass values of either -1, false, 'desc', or 'DESC', else
+     *  they will be set to 1 (ASC).
      * 
      * <code>
-     * $mongoqb->remove_index($collection, array('first_name' => 'ASC', 'last_name' => -1));
+     * $mongoqb->remove_index($collection,
+     *  array('first_name' => 'ASC', 'last_name' => -1));
      * </code>
      * 
      * @param string $collection Name of the collection
-     * @param array  $keys       Array of index keys to be removed. Array key should be the field name, the value should be -1
+     * @param array  $keys       Array of index keys to be removed. Array key
+     *  should be the field name, the value should be -1
      *
      * @access public
      * @return object
@@ -1448,18 +1541,22 @@ class QB
     public function removeIndex($collection = '', $keys = array())
     {
         if (empty($collection)) {
-            throw new MongoQbException('No Mongo collection specified to remove index from');
+            throw new MongoQbException('No Mongo collection specified to remove
+             index from');
         }
         
         if (empty($keys) OR ! is_array($keys)) {
-            throw new MongoQbException('Index could not be removed from MongoDB Collection because no keys were specified');
+            throw new MongoQbException('Index could not be removed from MongoDB
+             Collection because no keys were specified');
         }
         
-        if ($this->_dbhandle->{$collection}->deleteIndex($keys, $options) === true) {
+        if ($this->_dbhandle->{$collection}->deleteIndex($keys, $options)
+         === true) {
             $this->_clear($collection, 'remove_index');
             return $this;
         } else {
-            throw new MongoQbException('An error occurred when trying to remove an index from MongoDB Collection');
+            throw new MongoQbException('An error occurred when trying to remove
+             an index from MongoDB Collection');
         }
     }
     
@@ -1480,7 +1577,8 @@ class QB
     public function removeAllIndexes($collection = '')
     {
         if (empty($collection)) {
-            throw new MongoQbException('No Mongo collection specified to remove all indexes from');
+            throw new MongoQbException('No Mongo collection specified to remove
+             all indexes from');
         }
         $this->_dbhandle->{$collection}->deleteIndexes();
         $this->_clear($collection, 'remove_all_indexes');
@@ -1504,7 +1602,8 @@ class QB
     public function listIndexes($collection = '')
     {
         if (empty($collection)) {
-            throw new MongoQbException('No Mongo collection specified to remove all indexes from');
+            throw new MongoQbException('No Mongo collection specified to remove
+             all indexes from');
         }
         
         return $this->_dbhandle->{$collection}->getIndexInfo();
@@ -1513,13 +1612,15 @@ class QB
     /**
      * Mongo Date.
      * 
-     * Create new MongoDate object from current time or pass timestamp to create mongodate.
+     * Create new MongoDate object from current time or pass timestamp to create
+     *  mongodate.
      * 
      * <code>
      * $mongoqb->date($timestamp);
      * </code>
      *
-     * @param int|null $timestamp A unix timestamp (or null to return a MongoDate relative to time()
+     * @param int|null $timestamp A unix timestamp (or null to return a
+     *  MongoDate relative to time()
      *
      * @access public
      * @return array|object
@@ -1550,7 +1651,8 @@ class QB
     public function getDbref($object)
     {
         if (empty($object) || ! isset($object)) {
-            throw new MongoQbException('To use MongoDBRef::get() ala get_dbref() you must pass a valid reference object');
+            throw new MongoQbException('To use MongoDBRef::get() ala get_dbref()
+             you must pass a valid reference object');
         }
         
             return MongoDBRef::get($this->_dbhandle, $object);
@@ -1575,11 +1677,14 @@ class QB
     public function createDbref($collection = '', $field = '', $db_name = '')
     {
         if (empty($collection)) {
-            throw new MongoQbException('In order to retrieve documents from MongoDB, a collection name must be passed');
+            throw new MongoQbException('In order to retrieve documents from
+             MongoDB, a collection name must be passed');
         }
         
         if (empty($field) || ! isset($field)) {
-            throw new MongoQbException('To use MongoDBRef::create() ala create_dbref() you must pass a valid field id of the object which to link');
+            throw new MongoQbException('To use MongoDBRef::create() ala
+             create_dbref() you must pass a valid field id of the object which
+              to link');
         }
         
         $database = ($db_name !== '') ? $db_name : $this->_dbhandle;
@@ -1607,10 +1712,11 @@ class QB
     /**
      * Connect to MongoDB
      * 
-     * Establish a connection to MongoDB using the connection string generated in
-     * the connection_string() method.  If 'mongo_persist_key' was set to true in the
-     * config file, establish a persistent connection.  We allow for only the 'persist'
-     * option to be set because we want to establish a connection immediately.
+     * Establish a connection to MongoDB using the connection string generated
+     *  in the connection_string() method.  If 'mongo_persist_key' was set to
+     *  true in the config file, establish a persistent connection.  We allow
+     *  for only the 'persist' option to be set because we want to establish a
+     *  connection immediately.
      * 
      * @return object
      * @access private
@@ -1635,7 +1741,8 @@ class QB
             if($this->_configData['mongo_suppress_connect_error']) {
                 throw new MongoQbException('Unable to connect to MongoDB');
             } else {
-                throw new MongoQbException('Unable to connect to MongoDB: ' . $exception->getMessage());
+                throw new MongoQbException('Unable to connect to MongoDB: ' .
+                 $exception->getMessage());
             }
         }
     }
@@ -1661,11 +1768,13 @@ class QB
         $connection_string = 'mongodb://';
                 
         if (empty($this->_host)) {
-            throw new MongoQbException('The Host must be set to connect to MongoDB');
+            throw new MongoQbException('The Host must be set to connect to
+             MongoDB');
         }
         
         if (empty($this->_dbname)) {
-            throw new MongoQbException('The database name must be set to connect to MongoDB');
+            throw new MongoQbException('The database name must be set to connect
+             to MongoDB');
         }
         
         if ( ! empty($this->_user) AND ! empty($this->_pass)) {
@@ -1675,7 +1784,8 @@ class QB
         $connection_string .= $this->_host;
         
         if ($dbhostflag === true) {
-            $this->_connectionString = trim($connection_string) . '/' . $this->_dbname;
+            $this->_connectionString = trim($connection_string) . '/' .
+             $this->_dbname;
         } else {
             $this->_connectionString = trim($connection_string);
         }
