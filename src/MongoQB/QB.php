@@ -230,7 +230,83 @@ class QB
         }
     }
 
-        /**
+    /**
+    * Drop a database.
+    * 
+    * <code>
+    * $this->mongo_db->drop_db("foobar");
+    * </code>
+    *
+    * @param string $database Database name
+    *
+    * @access public
+    * @return boolean
+    */
+    public function drop_db($database = '')
+    {
+        if (empty($database))
+        {
+            $this->_show_error('Failed to drop MongoDB database because name is empty', 500);
+        }
+        
+        else
+        {
+            try
+            {
+                $this->_connection->{$database}->drop();
+                return TRUE;
+            }
+
+            catch (Exception $exception)
+            {
+                $this->_show_error('Unable to drop Mongo database `' . $database . '`: ' . $exception->getMessage(), 500);
+            }
+            
+        }
+    }
+
+
+    /**
+     * Drop a collection.
+     * 
+     * <code>
+     * $this->mongo_db->drop_collection('foo', 'bar');
+     * </code>
+     *
+     * @param string $database   Database name
+     * @param string $collection Collection name
+     *
+     * @access public
+     * @return boolean
+     */
+    public function drop_collection($database = '', $collection = '')
+    {
+        if (empty($database))
+        {
+            $this->_show_error('Failed to drop MongoDB collection because database name is empty', 500);
+        }
+    
+        if (empty($collection))
+        {
+            $this->_show_error('Failed to drop MongoDB collection because collection name is empty', 500);
+        }
+        
+        else
+        {
+            try
+            {
+                $this->_connection->{$database}->{$collection}->drop();
+                return TRUE;
+            }
+            
+            catch (Exception $exception)
+            {
+                $this->_show_error('Unable to drop Mongo collection `' . $collection . '`: ' . $exception->getMessage(), 500);
+            }
+        }
+    }
+
+    /**
      * Set select parameters.
      * 
      * Determine which fields to include OR which to exclude during the query process.
