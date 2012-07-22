@@ -1,0 +1,35 @@
+{
+	"name": "alexbilbie/MongoQB",
+	"description": "Mongo Query Builder",
+	"version": "0.0.1",
+	"homepage": "https://github.com/alexbilbie/MongoQB",
+	"license": "MIT",
+	"require": {
+		"php": ">=5.3.0"
+	},
+	"repositories": [
+		{
+			"type": "git",
+			"url": "https://github.com/alexbilbie/MongoQB"
+		}
+	],
+	"keywords": [
+		"mongo",
+		"mongodb",
+		"database",
+		"db"
+	],
+	"authors": [
+		{
+			"name": "Alex Bilbie",
+			"email": "mongoqb@alexbilbie.com",
+			"homepage": "http://www.httpster.org",
+			"role": "Developer"
+		}
+	],
+	"autoload": {
+		"psr-0": {
+			"MongoQB": "src/"
+		}
+	}
+}
