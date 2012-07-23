@@ -1,0 +1,16 @@
+language: php
+
+php:
+  - 5.3
+  - 5.4
+
+env:
+  - DB=mongo
+  - DB=mongoauth
+
+before_script:
+  - curl -s http://getcomposer.org/installer | php
+  - php composer.phar install
+  - sh -c "if [ '$DB' = 'mongoauth' ]; then mongo mongoqb --eval 'db.addUser("travis", "test");'; fi"
+
+#script: phpunit --coverage-text --configuration tests/travis/$DB.phpunit.xml
