@@ -2,7 +2,7 @@
 
 namespace MongoQB;
 
-class MongoQbException extends Exception {}
+class Exception extends \Exception {}
 
 class QB
 {
