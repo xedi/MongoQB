@@ -206,10 +206,6 @@ class QB
     /**
      * Switch database.
      *
-     * <code>
-     * $mongoqb->switch_db('foobar');
-     * </code>
-     *
      * @param string $database Database name
      *
      * @access public
@@ -235,10 +231,6 @@ class QB
 
     /**
     * Drop a database.
-    *
-    * <code>
-    * $mongoqb->drop_db("foobar");
-    * </code>
     *
     * @param string $database Database name
     *
@@ -267,10 +259,6 @@ class QB
 
     /**
      * Drop a collection.
-     *
-     * <code>
-     * $mongoqb->drop_collection('foo', 'bar');
-     * </code>
      *
      * @param string $database   Database name
      * @param string $collection Collection name
@@ -309,10 +297,6 @@ class QB
      *  $excludes array.  If you want to only choose fields to exclude, leave
      *  $includes an empty array().
      *
-     * <code>
-     * $mongoqb->select(array('foo', 'bar'))->get('foobar');
-     * </code>
-     *
      * @param array $includes Fields to include in the returned result
      * @param array $excludes Fields to exclude from the returned result
      *
@@ -349,10 +333,6 @@ class QB
      *  should be an associative array with the field as the key and the value
      *  as the search criteria.
      *
-     * <code>
-     * $mongoqb->where(array('foo' => 'bar'))->get('foobar');
-     * </code>
-     *
      * @param array|string $wheres Array of where conditions. If string, $value
      *  must be set
      * @param mixed $value Value of $wheres if $wheres is a string
@@ -378,10 +358,6 @@ class QB
      *
      * Get the documents where the value of a $field may be something else
      *
-     * <code>
-     * $mongoqb->or_where(array('foo'=>'bar', 'bar'=>'foo'))->get('foobar');
-     * </code>
-     *
      * @param array $wheres Array of where conditions
      *
      * @access public
@@ -404,13 +380,9 @@ class QB
     }
 
     /**
-     * where_in.
+     * Where in array.
      *
      * Get the documents where the value of a $field is in a given $in array().
-     *
-     * <code>
-     * $mongoqb->where_in('foo', array('bar', 'zoo', 'blah'))->get('foobar');
-     * </code>
      *
      * @param string $field     Name of the field
      * @param array  $in_values Array of values that $field could be
@@ -427,14 +399,10 @@ class QB
     }
 
     /**
-     * where_in_all.
+     * Where all are in array.
      *
      * Get the documents where the value of a $field is in all of a given $in
      *  array().
-     *
-     * <code>
-     * $mongoqb->where_in_all('foo', array('bar', 'zoo', 'blah'))->get('foobar')
-     * </code>
      *
      * @param string $field     Name of the field
      * @param array  $in_values Array of values that $field must be
@@ -456,10 +424,6 @@ class QB
      * Get the documents where the value of a $field is not in a given $in
      *  array().
      *
-     * <code>
-     * $mongoqb->where_not_in('foo', array('bar', 'zoo', 'blah'))->get('foobar')
-     * </code>
-     *
      * @param string $field     Name of the field
      * @param array  $in_values Array of values that $field isnt
      *
@@ -475,13 +439,9 @@ class QB
     }
 
     /**
-     * where_gt
+     * Where greater than
      *
-     * Get the documents where the value of a $field is greater than $value
-     *
-     * <code>
-     * $mongoqb->where_gt('foo', 20);
-     * </code>
+     * Get the documents where the value of a $field is greater than $value.
      *
      * @param string $field Name of the field
      * @param mixed  $value Value that $field is greater than
@@ -498,14 +458,10 @@ class QB
     }
 
     /**
-     * where_gte
+     * Where greater than or equal to
      *
      * Get the documents where the value of a $field is greater than or equal to
-     *  $value
-     *
-     * <code>
-     * $mongoqb->where_gte('foo', 20);
-     * </code>
+     *  $value.
      *
      * @param string $field Name of the field
      * @param mixed  $value Value that $field is greater than or equal to
@@ -522,13 +478,9 @@ class QB
     }
 
     /**
-     * where_lt.
+     * Where less than.
      *
      * Get the documents where the value of a $field is less than $x
-     *
-     * <code>
-     * $mongoqb->where_lt('foo', 20);
-     * </code>
      *
      * @param string $field Name of the field
      * @param mixed  $value Value that $field is less than
@@ -545,13 +497,9 @@ class QB
     }
 
     /**
-     * where_lte.
+     * Where less than or equal to
      *
      * Get the documents where the value of a $field is less than or equal to $x
-     *
-     * <code>
-     * $mongoqb->where_lte('foo', 20);
-     * </code>
      *
      * @param string $field Name of the field
      * @param mixed  $value Value that $field is less than or equal to
@@ -568,13 +516,9 @@ class QB
     }
 
     /**
-     * where_between
+     * Where between two values
      *
      * Get the documents where the value of a $field is between $x and $y
-     *
-     * <code>
-     * $mongoqb->where_between('foo', 20, 30);
-     * </code>
      *
      * @param string $field   Name of the field
      * @param int    $value_x Value that $field is greater than or equal to
@@ -593,14 +537,10 @@ class QB
     }
 
     /**
-     * where_between_ne
+     * Where between two values but not equal to
      *
      * Get the documents where the value of a $field is between but not equal to
      *  $x and $y
-     *
-     * <code>
-     * $mongoqb->where_between_ne('foo', 20, 30);
-     * </code>
      *
      * @param string $field   Name of the field
      * @param int    $value_x Value that $field is greater than or equal to
@@ -619,13 +559,9 @@ class QB
     }
 
     /**
-     * where_ne
+     * Where not equal to
      *
      * Get the documents where the value of a $field is not equal to $x
-     *
-     * <code>
-     * $mongoqb->where_ne('foo', 1)->get('foobar');
-     * </code>
      *
      * @param string $field Name of the field
      * @param mixed  $value Value that $field is not equal to
@@ -642,14 +578,10 @@ class QB
     }
 
     /**
-     * where_near
+     * Where near
      *
      * Get the documents nearest to an array of coordinates (your collection
      *  must have a geospatial index)
-     *
-     * <code>
-     * $mongoqb->where_near('foo', array('50','50'))->get('foobar');
-     * </code>
      *
      * @param string  $field     Name of the field
      * @param array   $coords    Array of coordinates
@@ -679,15 +611,11 @@ class QB
     }
 
     /**
-     * like
+     * Where like
      *
      * Get the documents where the (string) value of a $field is like a value.
      *  The defaults
      * allow for a case-insensitive search.
-     *
-     * <code>
-     * $mongoqb->like('foo', 'bar', 'im', false, true);
-     * </code>
      *
      * @param string $field The field
      * @param string $value The value to match against
@@ -858,10 +786,6 @@ class QB
     *
     * Count the number of found documents
     *
-    * <code>
-    * $mongoqb->count('foo');
-    * </code>
-    *
     * @param string $collection Name of the collection
     *
     * @access public
@@ -890,10 +814,6 @@ class QB
      * Insert.
      *
      * Insert a new document
-     *
-     * <code>
-     * $mongoqb->insert('foo', array('foo'=>'bar'));
-     * </code>
      *
      * @param string $collection Name of the collection
      * @param array  $insert     The document to be inserted
@@ -943,10 +863,6 @@ class QB
      *
      * Insert a new document
      *
-     * <code>
-     * $mongoqb->insert('foo', array('foo'=>'bar'));
-     * </code>
-     *
      * @param string $collection Name of the collection
      * @param array  $insert     The document to be inserted
      * @param array  $options    Array of options
@@ -985,13 +901,7 @@ class QB
     }
 
     /**
-     * Update a document.
-     *
-     * Updates a document
-     *
-     * <code>
-     * $mongoqb->update('foo');
-     * </code>
+     * Update a document
      *
      * @param string $collection Name of the collection
      * @param array  $options    Array of update options
@@ -1034,10 +944,6 @@ class QB
      *
      * Updates a document
      *
-     * <code>
-     * $mongoqb->update_all('foo');
-     * </code>
-     *
      * @param string $collection Name of the collection
      * @param array  $options    Array of update options
      *
@@ -1079,11 +985,6 @@ class QB
      *
      * Increments the value of a field
      *
-     * <code>
-     * $mongoqb->where(array('blog_id'=>123))->inc(array('num_comments' => 1))
-     *  ->update('blog_posts');
-     * </code>
-     *
      * @param array|string $fields Array of field names (or a single string
      *  field name) to be incremented
      * @param int $value Value that the field(s) should be incremented
@@ -1111,11 +1012,6 @@ class QB
      * Dec.
      *
      * Decrements the value of a field
-     *
-     * <code>
-     * $mongoqb->where(array('blog_id'=>123))->dec(array('num_comments' => 1))
-     *  ->update('blog_posts');
-     * </code>
      *
      * @param array|string $fields Array of field names (or a single string
      *  field name) to be decremented
@@ -1145,13 +1041,6 @@ class QB
      *
      * Sets a field to a value
      *
-     * <code>
-     * $mongoqb->where(array('blog_id'=>123))->set('posted', 1)
-     *  ->update('blog_posts');
-     * $mongoqb->where(array('blog_id'=>123))->set(array('posted' => 1,
-     *  'time' => time()))->update('blog_posts');
-     * </code>
-     *
      * @param array|string $fields Array of field names (or a single string
      *  field name)
      * @param mixed $value Value that the field(s) should be set to
@@ -1179,12 +1068,6 @@ class QB
      *
      * Unsets a field (or fields)
      *
-     * <code>
-     * $mongoqb->where(array('blog_id'=>123))->unset('posted')
-     *  ->update('blog_posts');
-     * $mongoqb->where(array('blog_id'=>123))->set(array('posted','time'))
-     *  ->update('blog_posts');
-     *
      * @param array|string $fields Array of field names (or a single string
      *  field name) to be unset
      *
@@ -1211,13 +1094,6 @@ class QB
      *
      * Adds value to the array only if its not in the array already
      *
-     * <code>
-     * $mongoqb->where(array('blog_id'=>123))->addtoset('tags', 'php')
-     *  ->update('blog_posts');
-     * $mongoqb->where(array('blog_id'=>123))->addtoset('tags', array('php',
-     *  'codeigniter', 'mongodb'))->update('blog_posts');
-     * </code>
-     *
      * @param string       $field  Name of the field
      * @param string|array $values Value of the field(s)
      *
@@ -1241,14 +1117,6 @@ class QB
      * Push.
      *
      * Pushes values into a field (field must be an array)
-     *
-     * <code>
-     * $mongoqb->where(array('blog_id'=>123))->push('comments', array('text' =>
-     *  'Hello world'))->update('blog_posts');
-     * $mongoqb->where(array('blog_id'=>123))->push(array('comments' =>
-     *  array('text' => 'Hello world')), 'viewed_by' => array('Alex')
-     *  ->update('blog_posts');
-     * </code>
      *
      * @param array|string $fields Array of field names (or a single string
      *  field name)
@@ -1278,13 +1146,6 @@ class QB
      *
      * Pops the last value from a field (field must be an array)
      *
-     * <code>
-     * $mongoqb->where(array('blog_id'=>123))->pop('comments')
-     * ->update('blog_posts');
-     * $mongoqb->where(array('blog_id'=>123))->pop(array('comments',
-     *  'viewed_by'))->update('blog_posts');
-     * </code>
-     *
      * @param string $field Name of the field to be popped
      *
      * @access public
@@ -1310,11 +1171,6 @@ class QB
      *
      * Removes by an array by the value of a field
      *
-     * <code>
-     * $mongoqb->pull('comments', array('comment_id'=>123))
-     * ->update('blog_posts');
-     * </code>
-     *
      * @param string $field Name of the field
      * @param array  $value Array of identifiers to remove $field
      *
@@ -1335,11 +1191,6 @@ class QB
      *
      * Renames a field
      *
-     * <code>
-     * $mongoqb->where(array('blog_id'=>123))->rename_field('posted_by',
-     *  'author')->update('blog_posts');
-     * </code>
-     *
      * @param string $old_name Name of the field to be renamed
      * @param string $new_name New name for $old_name
      *
@@ -1358,10 +1209,6 @@ class QB
      * Delete.
      *
      * delete document from the passed collection based upon certain criteria
-     *
-     * <code>
-     * $mongoqb->delete('foo');
-     * </code>
      *
      * @param string $collection Name of the collection
      *
@@ -1392,10 +1239,6 @@ class QB
      *
      * Delete all documents from the passed collection based upon certain
      *  criteria
-     *
-     * <code>
-     * $mongoqb->delete_all('foo', $data = array());
-     * </code>
      *
      * @param string $collection Name of the collection
      *
@@ -1432,11 +1275,6 @@ class QB
      * Runs a MongoDB command (such as GeoNear). See the MongoDB documentation
      *  for more usage scenarios - http://dochub.mongodb.org/core/commands
      *
-     * <code>
-     * $mongoqb->command(array('geoNear'=>'buildings', 'near' =>
-     *  array(53.228482, -0.547847), 'num' => 10, 'nearSphere'=>true));
-     * </code>
-     *
      * @param array $query The command query
      *
      * @access public
@@ -1448,9 +1286,9 @@ class QB
             $execute = $this->_dbhandle->command($query);
 
             return $execute;
-        } catch (MongoCursorException $exception) {
-            throw new MongoQbException('MongoDB command failed to execute: ' .
-             $exception->getMessage());
+        } catch (MongoCursorException $Exception) {
+            throw new Exception('MongoDB command failed to execute: ' .
+             $Exception->getMessage());
         }
     }
 
@@ -1460,11 +1298,6 @@ class QB
      * Ensure an index of the keys in a collection with optional parameters.
      *  To set values to descending order, you must pass values of either -1,
      *  false, 'desc', or 'DESC', else they will be set to 1 (ASC).
-     *
-     * <code>
-     * $mongoqb->add_index($collection, array('first_name' => 'ASC',
-     *  'last_name' => -1), array('unique' => true));
-     * </code>
      *
      * @param string $collection Name of the collection
      * @param array  $fields     Array of fields to be indexed. Key should be
@@ -1478,12 +1311,12 @@ class QB
      $options = array())
     {
         if (empty($collection)) {
-            throw new MongoQbException('No Mongo collection specified to add
+            throw new Exception('No Mongo collection specified to add
              index to');
         }
 
         if (empty($fields) OR ! is_array($fields)) {
-            throw new MongoQbException('Index could not be created to MongoDB
+            throw new Exception('Index could not be created to MongoDB
              Collection because no keys were specified');
         }
 
@@ -1502,7 +1335,7 @@ class QB
 
             return $this;
         } else {
-            throw new MongoQbException('An error occurred when trying to add an
+            throw new Exception('An error occurred when trying to add an
              index to MongoDB Collection');
         }
     }
@@ -1514,11 +1347,6 @@ class QB
      *  order, you must pass values of either -1, false, 'desc', or 'DESC', else
      *  they will be set to 1 (ASC).
      *
-     * <code>
-     * $mongoqb->remove_index($collection,
-     *  array('first_name' => 'ASC', 'last_name' => -1));
-     * </code>
-     *
      * @param string $collection Name of the collection
      * @param array  $keys       Array of index keys to be removed. Array key
      *  should be the field name, the value should be -1
@@ -1529,12 +1357,12 @@ class QB
     public function removeIndex($collection = '', $keys = array())
     {
         if (empty($collection)) {
-            throw new MongoQbException('No Mongo collection specified to remove
+            throw new Exception('No Mongo collection specified to remove
              index from');
         }
 
         if (empty($keys) OR ! is_array($keys)) {
-            throw new MongoQbException('Index could not be removed from MongoDB
+            throw new Exception('Index could not be removed from MongoDB
              Collection because no keys were specified');
         }
 
@@ -1544,7 +1372,7 @@ class QB
 
             return $this;
         } else {
-            throw new MongoQbException('An error occurred when trying to remove
+            throw new Exception('An error occurred when trying to remove
              an index from MongoDB Collection');
         }
     }
@@ -1553,10 +1381,6 @@ class QB
      * Remove all indexes
      *
      * Remove all indexes from a collection.
-     *
-     * <code>
-     * $mongoqb->remove_all_index($collection);
-     * </code>
      *
      * @param string $collection Name of the collection
      *
@@ -1580,10 +1404,6 @@ class QB
      *
      * Lists all indexes in a collection.
      *
-     * <code>
-     * $mongoqb->list_indexes($collection);
-     * </code>
-     *
      * @param string $collection Name of the collection
      *
      * @access public
@@ -1605,10 +1425,6 @@ class QB
      * Create new MongoDate object from current time or pass timestamp to create
      *  mongodate.
      *
-     * <code>
-     * $mongoqb->date($timestamp);
-     * </code>
-     *
      * @param int|null $timestamp A unix timestamp (or null to return a
      *  MongoDate relative to time()
      *
@@ -1629,10 +1445,6 @@ class QB
      *
      * Get mongo object from database reference using MongoDBRef
      *
-     * <code>
-     * $mongoqb->get_dbref($object);
-     * </code>
-     *
      * @param object $object A dbref object
      *
      * @access public
@@ -1652,10 +1464,6 @@ class QB
      * Create database reference.
      *
      * Create mongo dbref object to store later
-     *
-     * <code>
-     * $ref = $mongoqb->create_dbref($collection, $id);
-     * </code>
      *
      * @param string $collection Collection name
      * @param string $field      Field name
@@ -1686,10 +1494,6 @@ class QB
      * last_query.
      *
      * Return the last query
-     *
-     * <code>
-     * print_r($mongoqb->last_query());
-     * </code>
      *
      * @access public
      * @return array
