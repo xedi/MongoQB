@@ -256,7 +256,7 @@ class QB
      * @access public
      * @return boolean
      */
-    public function drop_collection($database = '', $collection = '')
+    public function dropCollection($database = '', $collection = '')
     {
         if (empty($database)) {
             $this->_show_error('Failed to drop MongoDB collection because
