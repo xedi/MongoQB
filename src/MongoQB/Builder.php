@@ -4,7 +4,7 @@ namespace MongoQB;
 
 class Exception extends \Exception {}
 
-class QB
+class Builder
 {
     /**
      * Config file data
@@ -37,20 +37,12 @@ class QB
     protected $_dbhandle = null;
 
     /**
-     * Generated connection string.
-     *
-     * @var mixed
-     * @access protected
-     */
-    protected $_connectionString = '';
-
-    /**
      * Database host.
      *
      * @var mixed
      * @access protected
      */
-    protected $_dsn = null;
+    private $_dsn = '';
 
     /**
      * Database name.
@@ -187,8 +179,9 @@ class QB
             throw new Exception('No config variables passed');
         }
 
+        $this->_connectionString();
+
         if ($connect) {
-            $this->_connectionString();
             $this->_connect();
         }
     }
@@ -201,16 +194,16 @@ class QB
      * @access public
      * @return boolean
      */
-    public function switchDb($database = '')
+    public function switchDb($dsn = '')
     {
-        if (empty($database)) {
-            throw new Exception('To switch MongoDB databases, a new
-             database name must be specified');
+        if (empty($dsn)) {
+            throw new Exception('To switch MongoDB databases, a
+             DSN must be specified');
         }
 
         try {
             // Regenerate the connection string and reconnect
-            $this->_configData['mongo_database'] = $database;
+            $this->_configData['dsn'] = $dsn;
             $this->_connectionString();
             $this->_connect();
         } catch (Exception $Exception) {
@@ -623,7 +616,7 @@ class QB
      * @access public
      * @return object
      */
-    public function like($field = '', $value = '', $flags = 'i',
+    public function whereLike($field = '', $value = '', $flags = 'i',
      $enable_start_wildcard = true, $enable_end_wildcard = true)
     {
         $field = (string) trim($field);
@@ -640,7 +633,7 @@ class QB
         }
 
         $regex = '/' . $value . '/' . $flags;
-        $this->wheres[$field] = new MongoRegex($regex);
+        $this->wheres[$field] = new \MongoRegex($regex);
 
         return $this;
     }
@@ -1244,7 +1237,7 @@ class QB
 
         if (isset($this->wheres['_id']) AND
          ! ($this->wheres['_id'] instanceof MongoId)) {
-            $this->wheres['_id'] = new MongoId($this->wheres['_id']);
+            $this->wheres['_id'] = new \MongoId($this->wheres['_id']);
         }
 
         try {
@@ -1424,10 +1417,10 @@ class QB
     public function date($timestamp = null)
     {
         if ($timestamp === null) {
-            return new MongoDate();
+            return new \MongoDate();
         }
 
-        return new MongoDate($timestamp);
+        return new \MongoDate($timestamp);
     }
 
     /**
