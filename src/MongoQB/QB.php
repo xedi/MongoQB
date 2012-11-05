@@ -10,7 +10,7 @@ class QB
      * Config file data
      *
      * @var array
-     * @access private
+     * @access protected
      */
     protected $_configData = array(
         'hostname'  =>  'mongodb://localhost:27017/admin',
@@ -24,35 +24,31 @@ class QB
      * Connection resource.
      *
      * @var mixed
-     * @access private
+     * @access protected
      */
-    private $_connection = null;
+    protected $_connection = null;
 
     /**
      * Database handle.
      *
      * @var resource
-     * @access private
+     * @access protected
      */
-    private $_dbhandle = null;
+    protected $_dbhandle = null;
 
     /**
      * Generated connection string.
      *
      * @var mixed
-     * @access private
+     * @access protected
      */
-    private $_connectionString = '';
+    protected $_connectionString = '';
 
     /**
      * Database host.
      *
      * @var mixed
-     * @access private
-     */
     private $_host = array('localhost:27017');
-
-    /**
      * Database user.
      *
      * @var mixed
@@ -72,49 +68,49 @@ class QB
      * Database name.
      *
      * @var strings
-     * @access private
+     * @access protected
      */
-    private $_dbname = '';
+    protected $_dbname = '';
 
     /**
      * Persist connection.
      *
      * @var boolean
-     * @access private
+     * @access protected
      */
-    private $_persist = true;
+    protected $_persist = true;
 
     /**
      * Persist key.
      *
      * @var string
-     * @access private
+     * @access protected
      */
-    private $_persist_key = 'ci_mongo';
+    protected $_persist_key = 'mongoqb';
 
     /**
      * Use replica set.
      *
      * @var false|string
-     * @access private
+     * @access protected
      */
-    private $_replicaSet = false;
+    protected $_replicaSet = false;
 
     /**
      * Query safety value.
      *
      * @var string
-     * @access private
+     * @access protected
      */
-    private $_querySafety = 'safe';
+    protected $_querySafety = 'safe';
 
     /**
      * Selects array.
      *
      * @var array
-     * @access private
+     * @access protected
      */
-    private $_selects = array();
+    protected $_selects = array();
 
     /**
      * Wheres array.
@@ -130,9 +126,9 @@ class QB
      * Sorts array.
      *
      * @var array
-     * @access private
+     * @access protected
      */
-    private $_sorts = array();
+    protected $_sorts = array();
 
     /**
      * Updates array.
@@ -148,17 +144,17 @@ class QB
      * Results limit.
      *
      * @var integer
-     * @access private
+     * @access protected
      */
-    private $_limit = 999999;
+    protected $_limit = 999999;
 
     /**
      * Query log.
      *
      * @var integer
-     * @access private
+     * @access protected
      */
-    private $_queryLog = array();
+    protected $_queryLog = array();
 
     /**
      * Result offset.
