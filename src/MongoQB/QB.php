@@ -48,21 +48,9 @@ class QB
      * Database host.
      *
      * @var mixed
-    private $_host = array('localhost:27017');
-     * Database user.
-     *
-     * @var mixed
-     * @access private
+     * @access protected
      */
-    private $_user = '';
-
-    /**
-     * Database user password.
-     *
-     * @var mixed
-     * @access private
-     */
-    private $_pass = '';
+    protected $_dsn = null;
 
     /**
      * Database name.
@@ -160,6 +148,10 @@ class QB
      * Result offset.
      *
      * @var integer
+     * @access protected
+     */
+    protected $_offset = 0;
+
      * @access private
      */
     private $_offset = 0;
