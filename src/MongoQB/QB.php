@@ -182,7 +182,7 @@ class QB
     public function setConfig(array $config, $connect = true)
     {
         if (is_array($config)) {
-            $this->_configData = $config;
+            $this->_configData = array_merge($config, $this->_configData);
         } else {
             throw new Exception('No config variables passed');
         }
