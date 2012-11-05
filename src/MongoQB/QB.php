@@ -1518,17 +1518,12 @@ class QB
         }
 
         try {
-            $this->_connection = new Mongo($this->_connectionString, $options);
+            $this->_connection = new \Mongo($this->_dsn, $options);
             $this->_dbhandle = $this->_connection->{$this->_dbname};
-
             return $this;
         } catch (MongoConnectionException $Exception) {
-            if ($this->_configData['mongo_suppress_connect_error']) {
-                throw new Exception('Unable to connect to MongoDB');
-            } else {
                 throw new Exception('Unable to connect to MongoDB: ' .
                  $Exception->getMessage());
-            }
         }
     }
 
@@ -1540,39 +1535,20 @@ class QB
      */
     private function _connectionString()
     {
-        $this->_host = trim($this->_configData['mongo_hostbase']);
-        $this->_user = trim($this->_configData['mongo_username']);
-        $this->_pass = trim($this->_configData['mongo_password']);
-        $this->_dbname = trim($this->_configData['mongo_database']);
-        $this->_persist = $this->_configData['mongo_persist'];
-        $this->_persist_key = trim($this->_configData['mongo_persist_key']);
-        $this->_replica_set = $this->_configData['mongo_replica_set'];
-        $this->_query_safety = trim($this->_configData['mongo_query_safety']);
-        $dbhostflag = (bool) $this->_configData['mongo_host_db_flag'];
+        $this->_dsn = trim($this->_configData['dsn']);
+        $this->_persist = $this->_configData['persist'];
+        $this->_persist_key = trim($this->_configData['persist_key']);
+        $this->_replica_set = $this->_configData['replica_set'];
+        $this->_query_safety = trim($this->_configData['query_safety']);
+        $dbname = explode('/', $this->_dsn);
+        $this->_dbname = end($dbname);
 
-        $connection_string = 'mongodb://';
-
-        if (empty($this->_host)) {
-            throw new Exception('The Host must be set to connect to
-             MongoDB');
+        if (empty($this->_dsn)) {
+            throw new Exception('The DSN is empty');
         }
 
         if (empty($this->_dbname)) {
-            throw new Exception('The database name must be set to connect
-             to MongoDB');
-        }
-
-        if ( ! empty($this->_user) AND ! empty($this->_pass)) {
-            $connection_string .= $this->_user . ':' . $this->_pass . '@';
-        }
-
-        $connection_string .= $this->_host;
-
-        if ($dbhostflag === true) {
-            $this->_connectionString = trim($connection_string) . '/' .
-             $this->_dbname;
-        } else {
-            $this->_connectionString = trim($connection_string);
+            throw new Exception('The database name must be set in the DSN string');
         }
     }
 
