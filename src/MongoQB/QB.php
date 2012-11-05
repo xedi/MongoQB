@@ -152,10 +152,6 @@ class QB
      */
     protected $_offset = 0;
 
-     * @access private
-     */
-    private $_offset = 0;
-
     /**
      * Constructor
      *
