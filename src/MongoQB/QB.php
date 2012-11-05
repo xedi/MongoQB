@@ -163,7 +163,7 @@ class QB
      */
     public function __construct(array $config, $connect = true)
     {
-        if ( ! class_exists('Mongo')) {
+        if ( ! class_exists('\Mongo')) {
             throw new Exception('The MongoDB PECL extension has not been
              installed or enabled');
         }
