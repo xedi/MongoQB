@@ -12,7 +12,13 @@ class QB
      * @var array
      * @access private
      */
-    private $_configData = array();
+    protected $_configData = array(
+        'hostname'  =>  'mongodb://localhost:27017/admin',
+        'persist'   =>  true,
+        'persist_key'   =>  'mongoqb',
+        'replica_set'   =>  false,
+        'query_safety'  =>  'safe'
+    );
 
     /**
      * Connection resource.
