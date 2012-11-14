@@ -1483,7 +1483,7 @@ class Builder
      */
     public function lastQuery()
     {
-        return $this->_query_log;
+        return $this->_queryLog;
     }
 
     /**
@@ -1553,7 +1553,7 @@ class Builder
      */
     private function _clear($collection, $action)
     {
-        $this->_query_log = array(
+        $this->_queryLog = array(
             'collection'    => $collection,
             'action'        => $action,
             'wheres'        => $this->wheres,
