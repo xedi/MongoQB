@@ -243,6 +243,12 @@ class QBtest extends PHPUnit_Framework_TestCase {
 				->get('test_select');
 
 		$this->assertEquals(1, count($result));
+
+		$result = $qb
+				->where('firstname', 'John')
+				->get('test_select');
+
+		$this->assertEquals(1, count($result));
 	}
 
 	function test_orWhere()
@@ -281,7 +287,7 @@ class QBtest extends PHPUnit_Framework_TestCase {
 		$this->defaultDoc($qb);
 
 		$result = $qb
-				->whereIn('likes', array(
+				->whereInAll('likes', array(
 					'whisky',
 					'gin'
 				))
@@ -338,7 +344,8 @@ class QBtest extends PHPUnit_Framework_TestCase {
 				->whereLt('age', 25)
 				->get('test_select');
 
-		$this->assertEquals(1, count($result));	}
+		$this->assertEquals(1, count($result));
+	}
 
 	function test_whereLte()
 	{
@@ -443,6 +450,15 @@ class QBtest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals('George', $results[0]['firstname']);
 		$this->assertEquals('Jane', $results[1]['firstname']);
 		$this->assertEquals('John', $results[2]['firstname']);
+
+		$results = $qb
+				->select(array('firstname'))
+				->orderBy(array('age' => 'asc'))
+				->get('test_select');
+
+		$this->assertEquals('John', $results[0]['firstname']);
+		$this->assertEquals('Jane', $results[1]['firstname']);
+		$this->assertEquals('George', $results[2]['firstname']);
 	}
 
 	function test_limit()
