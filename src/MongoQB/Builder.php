@@ -2,6 +2,9 @@
 
 namespace MongoQB;
 
+/**
+ * @codeCoverageIgnore
+ */
 class Exception extends \Exception {}
 
 class Builder
@@ -156,8 +159,10 @@ class Builder
     public function __construct(array $config, $connect = true)
     {
         if ( ! class_exists('\Mongo')) {
-            throw new Exception('The MongoDB PECL extension has not been
+            // @codeCoverageIgnoreStart
+            throw new \MongoQB\Exception('The MongoDB PECL extension has not been
              installed or enabled');
+            // @codeCoverageIgnoreEnd
         }
 
         $this->setConfig($config, $connect);
@@ -171,12 +176,12 @@ class Builder
      * @access public
      * @return void
      */
-    public function setConfig(array $config, $connect = true)
+    public function setConfig($config = array(), $connect = true)
     {
         if (is_array($config)) {
             $this->_configData = array_merge($config, $this->_configData);
         } else {
-            throw new Exception('No config variables passed');
+            throw new \MongoQB\Exception('No config variables passed');
         }
 
         $this->_connectionString();
@@ -197,7 +202,7 @@ class Builder
     public function switchDb($dsn = '')
     {
         if (empty($dsn)) {
-            throw new Exception('To switch MongoDB databases, a
+            throw new \MongoQB\Exception('To switch MongoDB databases, a
              DSN must be specified');
         }
 
@@ -206,8 +211,8 @@ class Builder
             $this->_configData['dsn'] = $dsn;
             $this->_connectionString();
             $this->_connect();
-        } catch (Exception $Exception) {
-            throw new Exception('Unable to switch Mongo Databases: ' .
+        } catch (\MongoConnectionException $Exception) {
+            throw new \MongoQB\Exception('Unable to switch Mongo Databases: ' .
              $Exception->getMessage());
         }
     }
@@ -224,7 +229,7 @@ class Builder
     {
         if (empty($database)) {
 
-           throw new Exception('Failed to drop MongoDB database because
+           throw new \MongoQB\Exception('Failed to drop MongoDB database because
             name is empty');
 
         } else {
@@ -232,9 +237,12 @@ class Builder
                 $this->_connection->{$database}->drop();
 
                 return true;
-            } catch (Exception $Exception) {
-                throw new Exception('Unable to drop Mongo database `' .
+            }
+            // @codeCoverageIgnoreStart
+            catch (\Exception $Exception) {
+                throw new \MongoQB\Exception('Unable to drop Mongo database `' .
                  $database . '`: ' . $Exception->getMessage());
+                // @codeCoverageIgnoreEnd
             }
 
         }
@@ -252,21 +260,24 @@ class Builder
     public function dropCollection($database = '', $collection = '')
     {
         if (empty($database)) {
-            $this->_show_error('Failed to drop MongoDB collection because
+            throw new \MongoQB\Exception('Failed to drop MongoDB collection because
              database name is empty', 500);
         }
 
         if (empty($collection)) {
-            $this->_show_error('Failed to drop MongoDB collection because
+            throw new \MongoQB\Exception('Failed to drop MongoDB collection because
              collection name is empty', 500);
         } else {
             try {
                 $this->_connection->{$database}->{$collection}->drop();
 
                 return true;
-            } catch (Exception $Exception) {
-                $this->_show_error('Unable to drop Mongo collection `' .
+            }
+            // @codeCoverageIgnoreStart
+            catch (\Exception $Exception) {
+                throw new \MongoQB\Exception('Unable to drop Mongo collection `' .
                  $collection . '`: ' . $Exception->getMessage(), 500);
+                // @codeCoverageIgnoreEnd
             }
         }
     }
@@ -368,15 +379,15 @@ class Builder
      * Get the documents where the value of a $field is in a given $in array().
      *
      * @param string $field     Name of the field
-     * @param array  $in_values Array of values that $field could be
+     * @param array  $inValues Array of values that $field could be
      *
      * @access public
      * @return object
      */
-    public function whereIn($field = '', $in_values = array())
+    public function whereIn($field = '', $inValues = array())
     {
         $this->_whereInit($field);
-        $this->wheres[$field]['$in'] = $in_values;
+        $this->wheres[$field]['$in'] = $inValues;
 
         return $this;
     }
@@ -388,15 +399,15 @@ class Builder
      *  array().
      *
      * @param string $field     Name of the field
-     * @param array  $in_values Array of values that $field must be
+     * @param array  $inValues Array of values that $field must be
      *
      * @access public
      * @return object
      */
-    public function whereInAll($field = '', $in_values = array())
+    public function whereInAll($field = '', $inValues = array())
     {
         $this->_whereInit($field);
-        $this->wheres[$field]['$all'] = $in_values;
+        $this->wheres[$field]['$all'] = $inValues;
 
         return $this;
     }
@@ -408,15 +419,15 @@ class Builder
      *  array().
      *
      * @param string $field     Name of the field
-     * @param array  $in_values Array of values that $field isnt
+     * @param array  $inValues Array of values that $field isnt
      *
      * @access public
      * @return object
      */
-    public function whereNotIn($field = '', $in_values = array())
+    public function whereNotIn($field = '', $inValues = array())
     {
         $this->_whereInit($field);
-        $this->wheres[$field]['$nin'] = $in_values;
+        $this->wheres[$field]['$nin'] = $inValues;
 
         return $this;
     }
@@ -504,17 +515,17 @@ class Builder
      * Get the documents where the value of a $field is between $x and $y
      *
      * @param string $field   Name of the field
-     * @param int    $value_x Value that $field is greater than or equal to
-     * @param int    $value_y Value that $field is less than or equal to
+     * @param int    $valueX Value that $field is greater than or equal to
+     * @param int    $valueY Value that $field is less than or equal to
      *
      * @access public
      * @return object
      */
-    public function whereBetween($field = '', $value_x = 0, $value_y = 0)
+    public function whereBetween($field = '', $valueX = 0, $valueY = 0)
     {
         $this->_whereInit($field);
-        $this->wheres[$field]['$gte'] = $value_x;
-        $this->wheres[$field]['$lte'] = $value_y;
+        $this->wheres[$field]['$gte'] = $valueX;
+        $this->wheres[$field]['$lte'] = $valueY;
 
         return $this;
     }
@@ -526,17 +537,17 @@ class Builder
      *  $x and $y
      *
      * @param string $field   Name of the field
-     * @param int    $value_x Value that $field is greater than or equal to
-     * @param int    $value_y Value that $field is less than or equal to
+     * @param int    $valueX Value that $field is greater than or equal to
+     * @param int    $valueY Value that $field is less than or equal to
      *
      * @access public
      * @return object
      */
-    public function whereBetweenNe($field = '', $value_x, $value_y)
+    public function whereBetweenNe($field = '', $valueX, $valueY)
     {
         $this->_whereInit($field);
-        $this->wheres[$field]['$gt'] = $value_x;
-        $this->wheres[$field]['$lt'] = $value_y;
+        $this->wheres[$field]['$gt'] = $valueX;
+        $this->wheres[$field]['$lt'] = $valueY;
 
         return $this;
     }
@@ -606,10 +617,10 @@ class Builder
      *  expression flags:<br>i = case insensitive<br>m = multiline<br>x = can
      *  contain comments<br>l = locale<br>s = dotall, "." matches everything,
      *  including newlines<br>u = match unicode
-     * @param boolean $enable_start_wildcard If set to anything other than true,
+     * @param boolean $enableStartWildcard If set to anything other than true,
      *  a starting line character "^" will be prepended to the search value,
      *  representing only searching for a value at the start of a new line.
-     * @param boolean $enable_end_wildcard If set to anything other than true,
+     * @param boolean $enableEndWildcard If set to anything other than true,
      *  an ending line character "$" will be appended to the search value,
      *  representing only searching for a value at the end of a line.
      *
@@ -617,18 +628,18 @@ class Builder
      * @return object
      */
     public function whereLike($field = '', $value = '', $flags = 'i',
-     $enable_start_wildcard = true, $enable_end_wildcard = true)
+     $enableStartWildcard = true, $enableEndWildcard = true)
     {
         $field = (string) trim($field);
         $this->_whereInit($field);
         $value = (string) trim($value);
         $value = quotemeta($value);
 
-        if ($enable_start_wildcard !== true) {
+        if ($enableStartWildcard !== true) {
             $value = '^' . $value;
         }
 
-        if ($enable_end_wildcard !== true) {
+        if ($enableEndWildcard !== true) {
             $value .= '$';
         }
 
@@ -724,15 +735,15 @@ class Builder
     * Return the found documents
     *
     * @param string $collection    Name of the collection
-    * @param bool   $return_cursor Return the native document cursor
+    * @param bool   $returnCursor Return the native document cursor
     *
     * @access public
     * @return array
     */
-    public function get($collection = '', $return_cursor = false)
+    public function get($collection = '', $returnCursor = false)
     {
         if (empty($collection)) {
-            throw new Exception('In order to retrieve documents from
+            throw new \MongoQB\Exception('In order to retrieve documents from
              MongoDB, a collection name must be passed');
         }
 
@@ -747,7 +758,7 @@ class Builder
         $this->_clear($collection, 'get');
 
         // Return the raw cursor if wanted
-        if ($return_cursor === true) {
+        if ($returnCursor === true) {
             return $cursor;
         }
 
@@ -757,7 +768,7 @@ class Builder
             try {
                 $documents[] = $cursor->getNext();
             } catch (MongoCursorException $Exception) {
-                throw new Exception($Exception->getMessage());
+                throw new \MongoQB\Exception($Exception->getMessage());
             }
         }
 
@@ -777,7 +788,7 @@ class Builder
     public function count($collection = '')
     {
         if (empty($collection)) {
-            throw new Exception('In order to retrieve a count of
+            throw new \MongoQB\Exception('In order to retrieve a count of
              documents from MongoDB, a collection name must be passed');
         }
 
@@ -809,12 +820,12 @@ class Builder
      $options = array())
     {
         if (empty($collection)) {
-            throw new Exception('No Mongo collection selected to insert
+            throw new \MongoQB\Exception('No Mongo collection selected to insert
              into');
         }
 
         if (count($insert) === 0 OR ! is_array($insert)) {
-            throw new Exception('Nothing to insert into Mongo collection
+            throw new \MongoQB\Exception('Nothing to insert into Mongo collection
              or insert is not an array');
         }
 
@@ -836,7 +847,7 @@ class Builder
                 return false;
             }
         } catch (MongoCursorException $Exception) {
-            throw new Exception('Insert of data into MongoDB failed: ' .
+            throw new \MongoQB\Exception('Insert of data into MongoDB failed: ' .
              $Exception->getMessage());
         }
     }
@@ -857,12 +868,12 @@ class Builder
      $options = array())
     {
         if (empty($collection)) {
-            throw new Exception('No Mongo collection selected to insert
+            throw new \MongoQB\Exception('No Mongo collection selected to insert
              into');
         }
 
         if (count($insert) === 0 || ! is_array($insert)) {
-            throw new Exception('Nothing to insert into Mongo collection
+            throw new \MongoQB\Exception('Nothing to insert into Mongo collection
              or insert is not an array');
         }
 
@@ -878,7 +889,7 @@ class Builder
                             ->{$collection}
                             ->batchInsert($insert, $options);
         } catch (MongoCursorException $Exception) {
-            throw new Exception('Insert of data into MongoDB failed: ' .
+            throw new \MongoQB\Exception('Insert of data into MongoDB failed: ' .
              $Exception->getMessage());
         }
     }
@@ -895,12 +906,12 @@ class Builder
     public function update($collection = '', $options = array())
     {
         if (empty($collection)) {
-            throw new Exception('No Mongo collection selected to
+            throw new \MongoQB\Exception('No Mongo collection selected to
              update');
         }
 
         if (count($this->updates) === 0) {
-            throw new Exception('Nothing to update in Mongo collection or
+            throw new \MongoQB\Exception('Nothing to update in Mongo collection or
              update is not an array');
         }
 
@@ -917,7 +928,7 @@ class Builder
 
             return false;
         } catch (MongoCursorException $Exception) {
-            throw new Exception('Update of data into MongoDB failed: ' .
+            throw new \MongoQB\Exception('Update of data into MongoDB failed: ' .
              $Exception->getMessage());
         }
     }
@@ -936,12 +947,12 @@ class Builder
     public function updateAll($collection = '', $options = array())
     {
         if (empty($collection)) {
-            throw new Exception('No Mongo collection selected to
+            throw new \MongoQB\Exception('No Mongo collection selected to
              update');
         }
 
         if (count($this->updates) === 0) {
-            throw new Exception('Nothing to update in Mongo collection or
+            throw new \MongoQB\Exception('Nothing to update in Mongo collection or
              update is not an array');
         }
 
@@ -958,7 +969,7 @@ class Builder
 
             return false;
         } catch (MongoCursorException $Exception) {
-            throw new Exception('Update of data into MongoDB failed: ' .
+            throw new \MongoQB\Exception('Update of data into MongoDB failed: ' .
              $Exception->getMessage());
         }
     }
@@ -978,7 +989,7 @@ class Builder
      */
     public function inc($fields = array(), $value = 0)
     {
-        $this->_updateInit§('$inc');
+        $this->_updateInit('$inc');
 
         if (is_string($fields)) {
             $this->updates['$inc'][$fields] = $value;
@@ -1007,6 +1018,8 @@ class Builder
     public function dec($fields = array(), $value = 0)
     {
         $this->_updateInit('$inc');
+
+        $value = 0 - $value;
 
         if (is_string($fields)) {
             $this->updates['$inc'][$fields] = $value;
@@ -1180,10 +1193,10 @@ class Builder
      * @access public
      * @return object
      */
-    public function renameField($old_name, $new_name)
+    public function renameField($oldName, $newName)
     {
         $this->_updateInit('$rename');
-        $this->updates['$rename'][] = array($old_name => $new_name);
+        $this->updates['$rename'][] = array($oldName => $newName);
 
         return $this;
     }
@@ -1201,7 +1214,7 @@ class Builder
     public function delete($collection = '')
     {
         if (empty($collection)) {
-            throw new Exception('No Mongo collection selected to delete
+            throw new \MongoQB\Exception('No Mongo collection selected to delete
              from');
         }
 
@@ -1212,7 +1225,7 @@ class Builder
 
             return true;
         } catch (MongoCursorException $Exception) {
-            throw new Exception('Delete of data into MongoDB failed: ' .
+            throw new \MongoQB\Exception('Delete of data into MongoDB failed: ' .
              $Exception->getMessage());
         }
     }
@@ -1231,7 +1244,7 @@ class Builder
     public function deleteAll($collection = '')
     {
         if (empty($collection)) {
-            throw new Exception('No Mongo collection selected to delete
+            throw new \MongoQB\Exception('No Mongo collection selected to delete
              from');
         }
 
@@ -1247,7 +1260,7 @@ class Builder
 
             return true;
         } catch (MongoCursorException $Exception) {
-            throw new Exception('Delete of data into MongoDB failed: ' .
+            throw new \MongoQB\Exception('Delete of data into MongoDB failed: ' .
              $Exception->getMessage());
         }
     }
@@ -1270,7 +1283,7 @@ class Builder
 
             return $execute;
         } catch (MongoCursorException $Exception) {
-            throw new Exception('MongoDB command failed to execute: ' .
+            throw new \MongoQB\Exception('MongoDB command failed to execute: ' .
              $Exception->getMessage());
         }
     }
@@ -1294,12 +1307,12 @@ class Builder
      $options = array())
     {
         if (empty($collection)) {
-            throw new Exception('No Mongo collection specified to add
+            throw new \MongoQB\Exception('No Mongo collection specified to add
              index to');
         }
 
         if (empty($fields) OR ! is_array($fields)) {
-            throw new Exception('Index could not be created to MongoDB
+            throw new \MongoQB\Exception('Index could not be created to MongoDB
              Collection because no keys were specified');
         }
 
@@ -1318,7 +1331,7 @@ class Builder
 
             return $this;
         } else {
-            throw new Exception('An error occurred when trying to add an
+            throw new \MongoQB\Exception('An error occurred when trying to add an
              index to MongoDB Collection');
         }
     }
@@ -1340,12 +1353,12 @@ class Builder
     public function removeIndex($collection = '', $keys = array())
     {
         if (empty($collection)) {
-            throw new Exception('No Mongo collection specified to remove
+            throw new \MongoQB\Exception('No Mongo collection specified to remove
              index from');
         }
 
         if (empty($keys) OR ! is_array($keys)) {
-            throw new Exception('Index could not be removed from MongoDB
+            throw new \MongoQB\Exception('Index could not be removed from MongoDB
              Collection because no keys were specified');
         }
 
@@ -1355,7 +1368,7 @@ class Builder
 
             return $this;
         } else {
-            throw new Exception('An error occurred when trying to remove
+            throw new \MongoQB\Exception('An error occurred when trying to remove
              an index from MongoDB Collection');
         }
     }
@@ -1373,7 +1386,7 @@ class Builder
     public function removeAllIndexes($collection = '')
     {
         if (empty($collection)) {
-            throw new Exception('No Mongo collection specified to remove
+            throw new \MongoQB\Exception('No Mongo collection specified to remove
              all indexes from');
         }
         $this->_dbhandle->{$collection}->deleteIndexes();
@@ -1395,7 +1408,7 @@ class Builder
     public function listIndexes($collection = '')
     {
         if (empty($collection)) {
-            throw new Exception('No Mongo collection specified to remove
+            throw new \MongoQB\Exception('No Mongo collection specified to remove
              all indexes from');
         }
 
@@ -1414,7 +1427,7 @@ class Builder
      * @access public
      * @return array|object
      */
-    public function date($timestamp = null)
+    public static function date($timestamp = null)
     {
         if ($timestamp === null) {
             return new \MongoDate();
@@ -1436,7 +1449,7 @@ class Builder
     public function getDbref($object)
     {
         if (empty($object) || ! isset($object)) {
-            throw new Exception('To use MongoDBRef::get() ala get_dbref()
+            throw new \MongoQB\Exception('To use MongoDBRef::get() ala get_dbref()
              you must pass a valid reference object');
         }
 
@@ -1458,12 +1471,12 @@ class Builder
     public function createDbref($collection = '', $field = '', $db_name = '')
     {
         if (empty($collection)) {
-            throw new Exception('In order to retrieve documents from
+            throw new \MongoQB\Exception('In order to retrieve documents from
              MongoDB, a collection name must be passed');
         }
 
         if (empty($field) || ! isset($field)) {
-            throw new Exception('To use MongoDBRef::create() ala
+            throw new \MongoQB\Exception('To use MongoDBRef::create() ala
              create_dbref() you must pass a valid field id of the object which
               to link');
         }
@@ -1515,7 +1528,7 @@ class Builder
             $this->_dbhandle = $this->_connection->{$this->_dbname};
             return $this;
         } catch (MongoConnectionException $Exception) {
-                throw new Exception('Unable to connect to MongoDB: ' .
+                throw new \MongoQB\Exception('Unable to connect to MongoDB: ' .
                  $Exception->getMessage());
         }
     }
@@ -1537,11 +1550,11 @@ class Builder
         $this->_dbname = end($dbname);
 
         if (empty($this->_dsn)) {
-            throw new Exception('The DSN is empty');
+            throw new \MongoQB\Exception('The DSN is empty');
         }
 
         if (empty($this->_dbname)) {
-            throw new Exception('The database name must be set in the DSN string');
+            throw new \MongoQB\Exception('The database name must be set in the DSN string');
         }
     }
 
