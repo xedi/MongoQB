@@ -1196,7 +1196,7 @@ class Builder
     public function renameField($oldName, $newName)
     {
         $this->_updateInit('$rename');
-        $this->updates['$rename'][] = array($oldName => $newName);
+        $this->updates['$rename'][$oldName] = $newName;
 
         return $this;
     }
