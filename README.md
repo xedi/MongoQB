@@ -35,7 +35,11 @@ Download the latest version:
 
 ## Unit tests
 
-To run the unit test suite make sure you have MongoDB installed locally and running with no authentication and on the default port - 27017. The library currently has 100% unit test coverage.
+Master branch [![Build Status](https://secure.travis-ci.org/alexbilbie/MongoQB.png?branch=master)](https://travis-ci.org/alexbilbie/MongoQB)
+
+Develop branch [![Build Status](https://secure.travis-ci.org/alexbilbie/MongoQB.png?branch=develop)](https://travis-ci.org/alexbilbie/MongoQB)
+
+The library currently has 100% unit test coverage. To run the unit test suite make sure you have MongoDB installed locally and running with no authentication and on the default port - 27017.
 
 Then run:
 
