@@ -1,7 +1,7 @@
 <phpunit colors="true" convertNoticesToExceptions="true" convertWarningsToExceptions="true" stopOnError="true" stopOnFailure="false" stopOnIncomplete="false" stopOnSkipped="false">
 	<testsuites>
 		<testsuite name="MongoQB Local Test Suite">
-			<directory suffix="test.php">../common/BuilderTest.php</directory>
+			<directory suffix="test.php">BuilderTest.php</directory>
 		</testsuite>
 	</testsuites>
 		<filter>

@@ -9,4 +9,4 @@ services: mongodb
 before_script:
   - pecl install mongo
 
-script: phpunit --coverage-text --configuration tests/local/phpunit.xml
+script: phpunit --coverage-text --configuration tests/phpunit.xml
