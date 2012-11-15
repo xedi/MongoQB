@@ -78,6 +78,30 @@ class QBtest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
+	 * @expectedException MongoQB\Exception
+	 */
+	function test__connectionString_no_dsn()
+	{
+		return new \MongoQB\Builder(array(
+			'dsn'	=>	'mongodb://localhost:27017/',
+			'query_safety'	=>	null
+		), false);
+
+
+	}
+
+	/**
+	 * @expectedException MongoQB\Exception
+	 */
+	function test__connectionString_no_db()
+	{
+		return new \MongoQB\Builder(array(
+			'dsn'	=>	'',
+			'query_safety'	=>	null
+		), false);
+	}
+
+	/**
 	 * @covers \MongoQB\Builder::setConfig
 	 */
 	function test__connect()
@@ -192,11 +216,42 @@ class QBtest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals(array(), $result);
 	}
 
+	/**
+	 * @expectedException \MongoQB\Exception
+	 */
+	function test_get_no_collection()
+	{
+		$qb = new \MongoQB\Builder(array(
+			'dsn'	=>	'mongodb://localhost:27017/mongoqbtest',
+		), true);
+
+		$result = $qb->get();
+	}
+
+	function test_get_raw_cursor()
+	{
+		$qb = new \MongoQB\Builder(array(
+			'dsn'	=>	'mongodb://localhost:27017/mongoqbtest',
+		), true);
+
+		$result = $qb->get('test_get', true);
+		$this->assertEquals('MongoCursor', get_class($result));
+	}
+
 	function test_count()
 	{
 		$qb = $this->defaultConnect();
 
 		$this->assertEquals(0, $qb->count('test_count'));
+	}
+
+	/**
+	 * @expectedException \MongoQB\Exception
+	 */
+	function test_count_no_collection()
+	{
+		$qb = $this->defaultConnect();
+		$qb->count();
 	}
 
 	function test_insert()
@@ -209,6 +264,55 @@ class QBtest extends PHPUnit_Framework_TestCase {
 
 		$this->assertNotEquals(false, $result);
 		$this->assertEquals(1, $qb->count('test_insert'));
+	}
+
+	/**
+	 * @expectedException \MongoQB\Exception
+	 */
+	function test_insert_no_collection()
+	{
+		$qb = $this->defaultConnect();
+		$result = $qb->insert();
+	}
+
+	/**
+	 * @expectedException \MongoQB\Exception
+	 */
+	function test_insert_no_array()
+	{
+		$qb = $this->defaultConnect();
+		$result = $qb->insert('test_insert', array());
+	}
+
+	function test_batchInsert()
+	{
+		$qb = $this->defaultConnect();
+
+		$result = $qb->batchInsert('test_insert', array(
+			array('foo' => 'bar'),
+			array('bar' => 'foo'),
+		));
+
+		$this->assertNotEquals(false, $result);
+		$this->assertEquals(2, $qb->count('test_insert'));
+	}
+
+	/**
+	 * @expectedException \MongoQB\Exception
+	 */
+	function test_batchInsert_no_collection()
+	{
+		$qb = $this->defaultConnect();
+		$result = $qb->batchInsert();
+	}
+
+	/**
+	 * @expectedException \MongoQB\Exception
+	 */
+	function test_batchInsert_no_array()
+	{
+		$qb = $this->defaultConnect();
+		$result = $qb->batchInsert('test_insert', array());
 	}
 
 	function test_select()
@@ -397,7 +501,23 @@ class QBtest extends PHPUnit_Framework_TestCase {
 
 	function test_whereNear()
 	{
-		$this->markTestIncomplete('todo');
+		$qb = $this->defaultConnect();
+		$qb->insert('test_select', array(
+			'name'	=>	'Buckingham Palace',
+			'latlong'	=>	array(51.501, -0.142)
+		));
+
+		$qb->addIndex('test_select', array('latlong' => '2d'));
+
+		$result1 = $qb->whereNear('latlong', array(51.501, -0.142))->get('test_select');
+
+		$result2 = $qb->whereNear('latlong', array(51.501, -0.142), 10)->get('test_select');
+
+		$result3 = $qb->whereNear('latlong', array(51.501, -0.142), 10, true)->get('test_select');
+
+		$this->assertEquals('Buckingham Palace', $result1[0]['name']);
+		$this->assertEquals('Buckingham Palace', $result2[0]['name']);
+		$this->assertEquals('Buckingham Palace', $result3[0]['name']);
 	}
 
 	function test_like()
@@ -508,11 +628,6 @@ class QBtest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals('John', $results[0]['firstname']);
 	}
 
-	function test_batchInsert()
-	{
-		$this->markTestIncomplete('todo');
-	}
-
 	function test_update()
 	{
 		$qb = $this->defaultConnect();
@@ -529,6 +644,24 @@ class QBtest extends PHPUnit_Framework_TestCase {
 		$result = $qb->get('test_select');
 
 		$this->assertEquals('Jane', $result[0]['firstname']);
+	}
+
+	/**
+	 * @expectedException MongoQB\Exception
+	 */
+	function test_update_no_collection()
+	{
+		$qb = $this->defaultConnect();
+		$qb->update();
+	}
+
+	/**
+	 * @expectedException MongoQB\Exception
+	 */
+	function test_update_no_update()
+	{
+		$qb = $this->defaultConnect();
+		$qb->update('test_select');
 	}
 
 	function test_updateAll()
@@ -554,16 +687,36 @@ class QBtest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals('Bob', $results[2]['firstname']);
 	}
 
+	/**
+	 * @expectedException MongoQB\Exception
+	 */
+	function test_updateAll_no_collection()
+	{
+		$qb = $this->defaultConnect();
+		$qb->updateAll();
+	}
+
+	/**
+	 * @expectedException MongoQB\Exception
+	 */
+	function test_updateAll_no_update()
+	{
+		$qb = $this->defaultConnect();
+		$qb->updateAll('test_select');
+	}
+
 	function test_inc()
 	{
 		$qb = $this->defaultConnect();
 		$this->defaultDoc($qb);
 
 		$qb->inc('age', 1)->update('test_select');
-
 		$result = $qb->get('test_select');
-
 		$this->assertEquals(23, $result[0]['age']);
+
+		$qb->inc(array('age' => 1))->update('test_select');
+		$result = $qb->get('test_select');
+		$this->assertEquals(24, $result[0]['age']);
 	}
 
 	function test_dec()
@@ -572,10 +725,12 @@ class QBtest extends PHPUnit_Framework_TestCase {
 		$this->defaultDoc($qb);
 
 		$qb->dec('age', 1)->update('test_select');
-
 		$result = $qb->get('test_select');
-
 		$this->assertEquals(21, $result[0]['age']);
+
+		$qb->dec(array('age' => 1))->update('test_select');
+		$result = $qb->get('test_select');
+		$this->assertEquals(20, $result[0]['age']);
 	}
 
 	function test_set()
@@ -584,10 +739,12 @@ class QBtest extends PHPUnit_Framework_TestCase {
 		$this->defaultDoc($qb);
 
 		$qb->set('firstname', 'Jane')->update('test_select');
-
 		$result = $qb->get('test_select');
-
 		$this->assertEquals('Jane', $result[0]['firstname']);
+
+		$qb->set(array('firstname' => 'Bob'))->update('test_select');
+		$result = $qb->get('test_select');
+		$this->assertEquals('Bob', $result[0]['firstname']);
 	}
 
 	function test_unsetField()
@@ -596,10 +753,12 @@ class QBtest extends PHPUnit_Framework_TestCase {
 		$this->defaultDoc($qb);
 
 		$qb->unsetField('firstname')->update('test_select');
-
 		$result = $qb->get('test_select');
-
 		$this->assertFalse(isset($result[0]['firstname']));
+
+		$qb->unsetField(array('surname'))->update('test_select');
+		$result = $qb->get('test_select');
+		$this->assertFalse(isset($result[0]['surname']));
 	}
 
 	function test_addToSet()
@@ -614,6 +773,11 @@ class QBtest extends PHPUnit_Framework_TestCase {
 		$qb->addToSet('likes', 'vodka')->update('test_select');
 		$result = $qb->get('test_select');
 		$this->assertTrue(in_array('vodka', $result[0]['likes']));
+
+		$qb->addToSet('likes', array('martini', 'champagne'))->update('test_select');
+		$result = $qb->get('test_select');
+		$this->assertTrue(in_array('martini', $result[0]['likes']));
+		$this->assertTrue(in_array('champagne', $result[0]['likes']));
 	}
 
 	function test_push()
@@ -624,6 +788,10 @@ class QBtest extends PHPUnit_Framework_TestCase {
 		$qb->push('likes', 'vodka')->update('test_select');
 		$result = $qb->get('test_select');
 		$this->assertTrue(in_array('vodka', $result[0]['likes']));
+
+		$qb->push(array('likes' => 'champagne'))->update('test_select');
+		$result = $qb->get('test_select');
+		$this->assertTrue(in_array('champagne', $result[0]['likes']));
 	}
 
 	function test_pop()
@@ -634,6 +802,10 @@ class QBtest extends PHPUnit_Framework_TestCase {
 		$qb->pop('likes')->update('test_select');
 		$result = $qb->get('test_select');
 		$this->assertFalse(in_array('whisky', $result[0]['likes']));
+
+		$qb->pop(array('likes'))->update('test_select');
+		$result = $qb->get('test_select');
+		$this->assertFalse(in_array('gin', $result[0]['likes']));
 	}
 
 	function test_pull()
@@ -646,7 +818,7 @@ class QBtest extends PHPUnit_Framework_TestCase {
 		$this->assertFalse(in_array('whisky', $result[0]['likes']));
 	}
 
-	function renameField()
+	function test_renameField()
 	{
 		$qb = $this->defaultConnect();
 		$this->defaultDoc($qb);
@@ -671,6 +843,15 @@ class QBtest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals(0, count($result));
 	}
 
+	/**
+	 * @expectedException MongoQB\Exception
+	 */
+	function test_delete_no_collection()
+	{
+		$qb = $this->defaultConnect();
+		$qb->delete();
+	}
+
 	function test_deleteAll()
 	{
 		$qb = $this->defaultConnect();
@@ -688,29 +869,130 @@ class QBtest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals(2, count($result));
 	}
 
+	/**
+	 * @expectedException MongoQB\Exception
+	 */
+	function test_deleteAll_no_collection()
+	{
+		$qb = $this->defaultConnect();
+		$qb->deleteAll();
+	}
+
 	function test_command()
 	{
-		$this->markTestIncomplete('todo');
-	}
+		$qb = $this->defaultConnect();
+		$this->defaultDoc($qb);
+		$result = $qb->command(array(
+			'distinct'	=>	'test_select',
+			'key'	=>	'age'
+		));
 
-	function test_addIndex()
-	{
-		$this->markTestIncomplete('todo');
-	}
-
-	function test_removeIndex()
-	{
-		$this->markTestIncomplete('todo');
-	}
-
-	function test_removeAllIndexes()
-	{
-		$this->markTestIncomplete('todo');
+		$this->assertEquals(22, $result['values'][0]);
 	}
 
 	function test_listIndexes()
 	{
-		$this->markTestIncomplete('todo');
+		$qb = $this->defaultConnect();
+		$this->assertEquals(array(), $qb->listIndexes('test_select'));
+	}
+
+	/**
+	 * @expectedException MongoQB\Exception
+	 */
+	function test_listIndexes_no_collection()
+	{
+		$qb = $this->defaultConnect();
+		$qb->listIndexes();
+	}
+
+	function test_addIndex()
+	{
+		$qb = $this->defaultConnect();
+		$qb->addIndex('test_select', array('asc' => 'asc'));
+		$qb->addIndex('test_select', array('desc' => 'desc'));
+		$qb->addIndex('test_select', array('one' => 1));
+		$qb->addIndex('test_select', array('minusone' => -1));
+		$qb->addIndex('test_select', array('2d'	 => '2d'));
+
+		$result = $qb->listIndexes('test_select');
+
+		$this->assertEquals(6, count($result));
+		$this->assertEquals(array('asc' => 1), $result[1]['key']);
+		$this->assertEquals(array('desc' => -1), $result[2]['key']);
+		$this->assertEquals(array('one' => 1), $result[3]['key']);
+		$this->assertEquals(array('minusone' => -1), $result[4]['key']);
+		$this->assertEquals(array('2d' => '2d'), $result[5]['key']);
+	}
+
+	/**
+	 * @expectedException MongoQB\Exception
+	 */
+	function test_addIndex_no_collection()
+	{
+		$qb = $this->defaultConnect();
+		$qb->addIndex();
+	}
+
+	/**
+	 * @expectedException MongoQB\Exception
+	 */
+	function test_addIndex_no_fields()
+	{
+		$qb = $this->defaultConnect();
+		$qb->addIndex('test_select');
+	}
+
+	function test_removeIndex()
+	{
+		$qb = $this->defaultConnect();
+
+		$qb->addIndex('test_select', array('foo' => -1));
+		$result = $qb->listIndexes('test_select');
+		$this->assertEquals(-1, $result[1]['key']['foo']);
+
+		$qb->removeIndex('test_select', array('foo' => -1));
+		$result = $qb->listIndexes('test_select');
+		$this->assertFalse(isset($result[1]));
+	}
+
+	/**
+	 * @expectedException MongoQB\Exception
+	 */
+	function test_removeIndex_no_collection()
+	{
+		$qb = $this->defaultConnect();
+		$qb->removeIndex();
+	}
+
+	/**
+	 * @expectedException MongoQB\Exception
+	 */
+	function test_removeIndex_no_keys()
+	{
+		$qb = $this->defaultConnect();
+		$qb->removeIndex('test_select');
+	}
+
+	function test_removeAllIndexes()
+	{
+		$qb = $this->defaultConnect();
+
+		$qb->addIndex('test_select', array('foo' => -1));
+		$result = $qb->listIndexes('test_select');
+		$this->assertEquals(-1, $result[1]['key']['foo']);
+
+		$qb->removeAllIndexes('test_select');
+		$result = $qb->listIndexes('test_select');
+		$this->assertFalse(isset($result[1]));
+	}
+
+	/**
+	 * @expectedException MongoQB\Exception
+	 */
+	function test_removeAllIndexes_no_collection()
+	{
+		$qb = $this->defaultConnect();
+		$qb->removeAllIndexes();
 	}
 
 	function test_date()
@@ -721,11 +1003,6 @@ class QBtest extends PHPUnit_Framework_TestCase {
 		$t = time();
 		$date2 = \MongoQB\Builder::date();
 		$this->assertEquals($t, $date2->sec);
-	}
-
-	function test_getDbref()
-	{
-		$this->markTestIncomplete('todo');
 	}
 
 	function test_lastQuery()
