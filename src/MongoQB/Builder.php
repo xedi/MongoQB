@@ -767,8 +767,11 @@ class Builder
         while ($cursor->hasNext()) {
             try {
                 $documents[] = $cursor->getNext();
-            } catch (MongoCursorException $Exception) {
+            }
+            // @codeCoverageIgnoreStart
+            catch (MongoCursorException $Exception) {
                 throw new \MongoQB\Exception($Exception->getMessage());
+                // @codeCoverageIgnoreEnd
             }
         }
 
@@ -844,11 +847,16 @@ class Builder
             if (isset($insert['_id'])) {
                 return $insert['_id'];
             } else {
+                // @codeCoverageIgnoreStart
                 return false;
+                // @codeCoverageIgnoreEnd
             }
-        } catch (MongoCursorException $Exception) {
+        }
+        // @codeCoverageIgnoreStart
+        catch (MongoCursorException $Exception) {
             throw new \MongoQB\Exception('Insert of data into MongoDB failed: ' .
              $Exception->getMessage());
+            // @codeCoverageIgnoreEnd
         }
     }
 
@@ -888,9 +896,12 @@ class Builder
             return $this->_dbhandle
                             ->{$collection}
                             ->batchInsert($insert, $options);
-        } catch (MongoCursorException $Exception) {
+        }
+        // @codeCoverageIgnoreStart
+        catch (MongoCursorException $Exception) {
             throw new \MongoQB\Exception('Insert of data into MongoDB failed: ' .
              $Exception->getMessage());
+            // @codeCoverageIgnoreEnd
         }
     }
 
@@ -926,10 +937,15 @@ class Builder
                 return $result['updatedExisting'];
             }
 
+            // @codeCoverageIgnoreStart
             return false;
-        } catch (MongoCursorException $Exception) {
+            // @codeCoverageIgnoreEnd
+        }
+        // @codeCoverageIgnoreStart
+        catch (MongoCursorException $Exception) {
             throw new \MongoQB\Exception('Update of data into MongoDB failed: ' .
              $Exception->getMessage());
+            // @codeCoverageIgnoreEnd
         }
     }
 
@@ -966,11 +982,15 @@ class Builder
             if ($result['updatedExisting'] > 0) {
                 return $result['updatedExisting'];
             }
-
+            // @codeCoverageIgnoreStart
             return false;
-        } catch (MongoCursorException $Exception) {
+            // @codeCoverageIgnoreEnd
+        }
+        // @codeCoverageIgnoreStart
+        catch (MongoCursorException $Exception) {
             throw new \MongoQB\Exception('Update of data into MongoDB failed: ' .
              $Exception->getMessage());
+            // @codeCoverageIgnoreEnd
         }
     }
 
@@ -1019,12 +1039,12 @@ class Builder
     {
         $this->_updateInit('$inc');
 
-        $value = 0 - $value;
-
         if (is_string($fields)) {
+            $value = 0 - $value;
             $this->updates['$inc'][$fields] = $value;
         } elseif (is_array($fields)) {
             foreach ($fields as $field => $value) {
+                $value = 0 - $value;
                 $this->updates['$inc'][$field] = $value;
             }
         }
@@ -1224,9 +1244,12 @@ class Builder
             $this->_clear($collection, 'delete');
 
             return true;
-        } catch (MongoCursorException $Exception) {
+        }
+        // @codeCoverageIgnoreStart
+        catch (MongoCursorException $Exception) {
             throw new \MongoQB\Exception('Delete of data into MongoDB failed: ' .
              $Exception->getMessage());
+            // @codeCoverageIgnoreEnd
         }
     }
 
@@ -1248,20 +1271,18 @@ class Builder
              from');
         }
 
-        if (isset($this->wheres['_id']) AND
-         ! ($this->wheres['_id'] instanceof MongoId)) {
-            $this->wheres['_id'] = new \MongoId($this->wheres['_id']);
-        }
-
         try {
             $this->_dbhandle->{$collection}->remove($this->wheres,
              array($this->_query_safety => true, 'justOne' => false));
             $this->_clear($collection, 'delete_all');
 
             return true;
-        } catch (MongoCursorException $Exception) {
+        }
+        // @codeCoverageIgnoreStart
+        catch (MongoCursorException $Exception) {
             throw new \MongoQB\Exception('Delete of data into MongoDB failed: ' .
              $Exception->getMessage());
+            // @codeCoverageIgnoreEnd
         }
     }
 
@@ -1282,9 +1303,12 @@ class Builder
             $execute = $this->_dbhandle->command($query);
 
             return $execute;
-        } catch (MongoCursorException $Exception) {
+        }
+        // @codeCoverageIgnoreStart
+        catch (MongoCursorException $Exception) {
             throw new \MongoQB\Exception('MongoDB command failed to execute: ' .
              $Exception->getMessage());
+            // @codeCoverageIgnoreEnd
         }
     }
 
@@ -1307,41 +1331,44 @@ class Builder
      $options = array())
     {
         if (empty($collection)) {
-            throw new \MongoQB\Exception('No Mongo collection specified to add
+            throw new \MongoQB\Exception('No MongoDB collection specified to add
              index to');
         }
 
         if (empty($fields) OR ! is_array($fields)) {
-            throw new \MongoQB\Exception('Index could not be created to MongoDB
-             Collection because no keys were specified');
+            throw new \MongoQB\Exception('Index could not be added to MongoDB
+             collection because no keys were specified');
         }
 
         foreach ($fields as $field => $value) {
             if($value === -1 OR $value === false OR
              strtolower($value) === 'desc') {
                 $keys[$field] = -1;
-            } else {
+            } elseif($value === 1 OR $value === true OR
+             strtolower($value) === 'asc') {
                 $keys[$field] = 1;
+            } else {
+                $keys[$field] = $value;
             }
         }
 
-        if ($this->_dbhandle->{$collection}->ensureIndex($fields, $options)
+        if ($this->_dbhandle->{$collection}->ensureIndex($keys, $options)
          === true) {
             $this->_clear($collection, 'add_index');
 
             return $this;
         } else {
+            // @codeCoverageIgnoreStart
             throw new \MongoQB\Exception('An error occurred when trying to add an
              index to MongoDB Collection');
+            // @codeCoverageIgnoreEnd
         }
     }
 
     /**
      * Remove indexes.
      *
-     * Remove an index of the keys in a collection. To set values to descending
-     *  order, you must pass values of either -1, false, 'desc', or 'DESC', else
-     *  they will be set to 1 (ASC).
+     * Remove an index of the keys in a collection.
      *
      * @param string $collection Name of the collection
      * @param array  $keys       Array of index keys to be removed. Array key
@@ -1362,15 +1389,18 @@ class Builder
              Collection because no keys were specified');
         }
 
-        if ($this->_dbhandle->{$collection}->deleteIndex($keys, $options)
-         === true) {
+       if ($this->_dbhandle->{$collection}->deleteIndex($keys)) {
             $this->_clear($collection, 'remove_index');
 
             return $this;
         } else {
+            // @codeCoverageIgnoreStart
             throw new \MongoQB\Exception('An error occurred when trying to remove
              an index from MongoDB Collection');
+            // @codeCoverageIgnoreEnd
         }
+
+        return $this->_dbhandle->{$collection}->deleteIndex($keys);
     }
 
     /**
@@ -1437,56 +1467,6 @@ class Builder
     }
 
     /**
-     * Get database reference
-     *
-     * Get mongo object from database reference using MongoDBRef
-     *
-     * @param object $object A dbref object
-     *
-     * @access public
-     * @return array|object
-     */
-    public function getDbref($object)
-    {
-        if (empty($object) || ! isset($object)) {
-            throw new \MongoQB\Exception('To use MongoDBRef::get() ala get_dbref()
-             you must pass a valid reference object');
-        }
-
-            return MongoDBRef::get($this->_dbhandle, $object);
-    }
-
-    /**
-     * Create database reference.
-     *
-     * Create mongo dbref object to store later
-     *
-     * @param string $collection Collection name
-     * @param string $field      Field name
-     * @param string $db_name    Database name
-     *
-     * @access public
-     * @return array|object
-     */
-    public function createDbref($collection = '', $field = '', $db_name = '')
-    {
-        if (empty($collection)) {
-            throw new \MongoQB\Exception('In order to retrieve documents from
-             MongoDB, a collection name must be passed');
-        }
-
-        if (empty($field) || ! isset($field)) {
-            throw new \MongoQB\Exception('To use MongoDBRef::create() ala
-             create_dbref() you must pass a valid field id of the object which
-              to link');
-        }
-
-        $database = ($db_name !== '') ? $db_name : $this->_dbhandle;
-
-        return MongoDBRef::create($collection, $field, $database);
-    }
-
-    /**
      * last_query.
      *
      * Return the last query
@@ -1520,16 +1500,21 @@ class Builder
         }
 
         if ($this->_replica_set !== false) {
+            // @codeCoverageIgnoreStart
             $options['replicaSet'] = $this->_replica_set;
-        }
+
+        } // @codeCoverageIgnoreEnd
 
         try {
             $this->_connection = new \Mongo($this->_dsn, $options);
             $this->_dbhandle = $this->_connection->{$this->_dbname};
             return $this;
-        } catch (MongoConnectionException $Exception) {
+        }
+        // @codeCoverageIgnoreStart
+        catch (MongoConnectionException $Exception) {
                 throw new \MongoQB\Exception('Unable to connect to MongoDB: ' .
                  $Exception->getMessage());
+                // @codeCoverageIgnoreEnd
         }
     }
 
@@ -1542,20 +1527,24 @@ class Builder
     private function _connectionString()
     {
         $this->_dsn = trim($this->_configData['dsn']);
-        $this->_persist = $this->_configData['persist'];
-        $this->_persist_key = trim($this->_configData['persist_key']);
-        $this->_replica_set = $this->_configData['replica_set'];
-        $this->_query_safety = trim($this->_configData['query_safety']);
-        $dbname = explode('/', $this->_dsn);
-        $this->_dbname = end($dbname);
 
         if (empty($this->_dsn)) {
             throw new \MongoQB\Exception('The DSN is empty');
         }
 
-        if (empty($this->_dbname)) {
+        $this->_persist = $this->_configData['persist'];
+        $this->_persist_key = trim($this->_configData['persist_key']);
+        $this->_replica_set = $this->_configData['replica_set'];
+        $this->_query_safety = trim($this->_configData['query_safety']);
+
+        $parts = parse_url($this->_dsn);
+
+        if ( ! isset($parts['path']) OR str_replace('/', '', $parts['path']) === '') {
             throw new \MongoQB\Exception('The database name must be set in the DSN string');
         }
+
+        $this->_dbname = str_replace('/', '', $parts['path']);
+        return;
     }
 
     /**
