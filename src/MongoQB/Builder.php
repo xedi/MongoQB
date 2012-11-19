@@ -26,7 +26,7 @@ class Builder
     /**
      * Connection resource.
      *
-     * @var mixed
+     * @var null|\Mongo
      * @access protected
      */
     protected $_connection = null;
@@ -34,7 +34,7 @@ class Builder
     /**
      * Database handle.
      *
-     * @var resource
+     * @var \MongoDB
      * @access protected
      */
     protected $_dbhandle = null;
@@ -50,7 +50,7 @@ class Builder
     /**
      * Database name.
      *
-     * @var strings
+     * @var string
      * @access protected
      */
     protected $_dbname = '';
@@ -74,7 +74,7 @@ class Builder
     /**
      * Use replica set.
      *
-     * @var false|string
+     * @var boolean|string
      * @access protected
      */
     protected $_replicaSet = false;
@@ -769,7 +769,7 @@ class Builder
                 $documents[] = $cursor->getNext();
             }
             // @codeCoverageIgnoreStart
-            catch (MongoCursorException $Exception) {
+            catch (\MongoCursorException $Exception) {
                 throw new \MongoQB\Exception($Exception->getMessage());
                 // @codeCoverageIgnoreEnd
             }
@@ -853,7 +853,7 @@ class Builder
             }
         }
         // @codeCoverageIgnoreStart
-        catch (MongoCursorException $Exception) {
+        catch (\MongoCursorException $Exception) {
             throw new \MongoQB\Exception('Insert of data into MongoDB failed: ' .
              $Exception->getMessage());
             // @codeCoverageIgnoreEnd
@@ -898,7 +898,7 @@ class Builder
                             ->batchInsert($insert, $options);
         }
         // @codeCoverageIgnoreStart
-        catch (MongoCursorException $Exception) {
+        catch (\MongoCursorException $Exception) {
             throw new \MongoQB\Exception('Insert of data into MongoDB failed: ' .
              $Exception->getMessage());
             // @codeCoverageIgnoreEnd
@@ -942,7 +942,7 @@ class Builder
             // @codeCoverageIgnoreEnd
         }
         // @codeCoverageIgnoreStart
-        catch (MongoCursorException $Exception) {
+        catch (\MongoCursorException $Exception) {
             throw new \MongoQB\Exception('Update of data into MongoDB failed: ' .
              $Exception->getMessage());
             // @codeCoverageIgnoreEnd
@@ -987,7 +987,7 @@ class Builder
             // @codeCoverageIgnoreEnd
         }
         // @codeCoverageIgnoreStart
-        catch (MongoCursorException $Exception) {
+        catch (\MongoCursorException $Exception) {
             throw new \MongoQB\Exception('Update of data into MongoDB failed: ' .
              $Exception->getMessage());
             // @codeCoverageIgnoreEnd
@@ -1246,7 +1246,7 @@ class Builder
             return true;
         }
         // @codeCoverageIgnoreStart
-        catch (MongoCursorException $Exception) {
+        catch (\MongoCursorException $Exception) {
             throw new \MongoQB\Exception('Delete of data into MongoDB failed: ' .
              $Exception->getMessage());
             // @codeCoverageIgnoreEnd
@@ -1279,7 +1279,7 @@ class Builder
             return true;
         }
         // @codeCoverageIgnoreStart
-        catch (MongoCursorException $Exception) {
+        catch (\MongoCursorException $Exception) {
             throw new \MongoQB\Exception('Delete of data into MongoDB failed: ' .
              $Exception->getMessage());
             // @codeCoverageIgnoreEnd
@@ -1305,7 +1305,7 @@ class Builder
             return $execute;
         }
         // @codeCoverageIgnoreStart
-        catch (MongoCursorException $Exception) {
+        catch (\MongoCursorException $Exception) {
             throw new \MongoQB\Exception('MongoDB command failed to execute: ' .
              $Exception->getMessage());
             // @codeCoverageIgnoreEnd
