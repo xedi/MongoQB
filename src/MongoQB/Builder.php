@@ -295,7 +295,7 @@ class Builder
      * @param array $excludes Fields to exclude from the returned result
      *
      * @access public
-     * @return object
+     * @return \MongoQB\Builder
      */
     public function select($includes = array(), $excludes = array())
     {
@@ -332,7 +332,7 @@ class Builder
      * @param mixed $value Value of $wheres if $wheres is a string
      *
      * @access public
-     * @return object
+     * @return \MongoQB\Builder
      */
     public function where($wheres = array(), $value = null)
     {
@@ -355,7 +355,7 @@ class Builder
      * @param array $wheres Array of where conditions
      *
      * @access public
-     * @return object
+     * @return \MongoQB\Builder
      */
     public function orWhere($wheres = array())
     {
@@ -382,7 +382,7 @@ class Builder
      * @param array  $inValues Array of values that $field could be
      *
      * @access public
-     * @return object
+     * @return \MongoQB\Builder
      */
     public function whereIn($field = '', $inValues = array())
     {
@@ -402,7 +402,7 @@ class Builder
      * @param array  $inValues Array of values that $field must be
      *
      * @access public
-     * @return object
+     * @return \MongoQB\Builder
      */
     public function whereInAll($field = '', $inValues = array())
     {
@@ -422,7 +422,7 @@ class Builder
      * @param array  $inValues Array of values that $field isnt
      *
      * @access public
-     * @return object
+     * @return \MongoQB\Builder
      */
     public function whereNotIn($field = '', $inValues = array())
     {
@@ -441,7 +441,7 @@ class Builder
      * @param mixed  $value Value that $field is greater than
      *
      * @access public
-     * @return object
+     * @return \MongoQB\Builder
      */
     public function whereGt($field = '', $value = null)
     {
@@ -461,7 +461,7 @@ class Builder
      * @param mixed  $value Value that $field is greater than or equal to
      *
      * @access public
-     * @return object
+     * @return \MongoQB\Builder
      */
     public function whereGte($field = '', $value = null)
     {
@@ -480,7 +480,7 @@ class Builder
      * @param mixed  $value Value that $field is less than
      *
      * @access public
-     * @return object
+     * @return \MongoQB\Builder
      */
     public function whereLt($field = '', $value = null)
     {
@@ -499,7 +499,7 @@ class Builder
      * @param mixed  $value Value that $field is less than or equal to
      *
      * @access public
-     * @return object
+     * @return \MongoQB\Builder
      */
     public function whereLte($field = '', $value = null)
     {
@@ -519,7 +519,7 @@ class Builder
      * @param int    $valueY Value that $field is less than or equal to
      *
      * @access public
-     * @return object
+     * @return \MongoQB\Builder
      */
     public function whereBetween($field = '', $valueX = 0, $valueY = 0)
     {
@@ -541,7 +541,7 @@ class Builder
      * @param int    $valueY Value that $field is less than or equal to
      *
      * @access public
-     * @return object
+     * @return \MongoQB\Builder
      */
     public function whereBetweenNe($field = '', $valueX, $valueY)
     {
@@ -561,7 +561,7 @@ class Builder
      * @param mixed  $value Value that $field is not equal to
      *
      * @access public
-     * @return object
+     * @return \MongoQB\Builder
      */
     public function whereNe($field = '', $value)
     {
@@ -584,7 +584,7 @@ class Builder
      *  (useful when searching over large distances)
      *
      * @access public
-     * @return object
+     * @return \MongoQB\Builder
      */
     public function whereNear($field = '', $coords = array(), $distance = null,
      $spherical = false)
@@ -625,7 +625,7 @@ class Builder
      *  representing only searching for a value at the end of a line.
      *
      * @access public
-     * @return object
+     * @return \MongoQB\Builder
      */
     public function whereLike($field = '', $value = '', $flags = 'i',
      $enableStartWildcard = true, $enableEndWildcard = true)
@@ -659,7 +659,7 @@ class Builder
      * @param array $fields Array of fields with their sort type (asc or desc)
      *
      * @access public
-     * @return object
+     * @return \MongoQB\Builder
      */
     public function orderBy($fields = array())
     {
@@ -683,7 +683,7 @@ class Builder
      * @param int $limit The maximum number of documents that will be returned
      *
      * @access public
-     * @return object
+     * @return \MongoQB\Builder
      */
     public function limit($limit = 99999)
     {
@@ -702,7 +702,7 @@ class Builder
      * @param int $offset The number of documents to offset the search by
      *
      * @access public
-     * @return object
+     * @return \MongoQB\Builder
      */
     public function offset($offset = 0)
     {
@@ -1005,7 +1005,7 @@ class Builder
      *  by
      *
      * @access public
-     * @return object
+     * @return \MongoQB\Builder
      */
     public function inc($fields = array(), $value = 0)
     {
@@ -1033,7 +1033,7 @@ class Builder
      *  by
      *
      * @access public
-     * @return object
+     * @return \MongoQB\Builder
      */
     public function dec($fields = array(), $value = 0)
     {
@@ -1062,7 +1062,7 @@ class Builder
      * @param mixed $value Value that the field(s) should be set to
      *
      * @access public
-     * @return object
+     * @return \MongoQB\Builder
      */
     public function set($fields, $value = null)
     {
@@ -1088,7 +1088,7 @@ class Builder
      *  field name) to be unset
      *
      * @access public
-     * @return object
+     * @return \MongoQB\Builder
      */
     public function unsetField($fields)
     {
@@ -1114,7 +1114,7 @@ class Builder
      * @param string|array $values Value of the field(s)
      *
      * @access public
-     * @return object
+     * @return \MongoQB\Builder
      */
     public function addToSet($field, $values)
     {
@@ -1140,7 +1140,7 @@ class Builder
      *  array or object
      *
      * @access public
-     * @return object
+     * @return \MongoQB\Builder
      */
     public function push($fields, $value = array())
     {
@@ -1165,7 +1165,7 @@ class Builder
      * @param string $field Name of the field to be popped
      *
      * @access public
-     * @return object
+     * @return \MongoQB\Builder
      */
     public function pop($field)
     {
@@ -1191,7 +1191,7 @@ class Builder
      * @param array  $value Array of identifiers to remove $field
      *
      * @access public
-     * @return object
+     * @return \MongoQB\Builder
      */
     public function pull($field = '', $value = array())
     {
@@ -1211,7 +1211,7 @@ class Builder
      * @param string $new_name New name for $old_name
      *
      * @access public
-     * @return object
+     * @return \MongoQB\Builder
      */
     public function renameField($oldName, $newName)
     {
@@ -1229,7 +1229,7 @@ class Builder
      * @param string $collection Name of the collection
      *
      * @access public
-     * @return object
+     * @return \MongoQB\Builder
      */
     public function delete($collection = '')
     {
@@ -1262,7 +1262,7 @@ class Builder
      * @param string $collection Name of the collection
      *
      * @access public
-     * @return object
+     * @return \MongoQB\Builder
      */
     public function deleteAll($collection = '')
     {
@@ -1295,7 +1295,7 @@ class Builder
      * @param array $query The command query
      *
      * @access public
-     * @return object
+     * @return \MongoQB\Builder
      */
     public function command($query = array())
     {
@@ -1325,7 +1325,7 @@ class Builder
      * @param array $options Array of options
      *
      * @access public
-     * @return object
+     * @return \MongoQB\Builder
      */
     public function addIndex($collection = '', $fields = array(),
      $options = array())
@@ -1375,7 +1375,7 @@ class Builder
      *  should be the field name, the value should be -1
      *
      * @access public
-     * @return object
+     * @return \MongoQB\Builder
      */
     public function removeIndex($collection = '', $keys = array())
     {
@@ -1485,7 +1485,7 @@ class Builder
      * Establish a connection to MongoDB using the connection string generated
      *  in the connection_string() method.
      *
-     * @return object
+     * @return \MongoQB\Builder
      * @access private
      */
     private function _connect()
