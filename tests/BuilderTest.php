@@ -64,7 +64,7 @@ class QBtest extends PHPUnit_Framework_TestCase {
 		$_persist->setAccessible(true);
 		$this->assertTrue($_persist->getValue($qb));
 
-		$_persist_key = $r->getProperty('_persist_key');
+		$_persist_key = $r->getProperty('_persistKey');
 		$_persist_key->setAccessible(true);
 		$this->assertEquals('mongoqb', $_persist_key->getValue($qb));
 
