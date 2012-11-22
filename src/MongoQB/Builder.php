@@ -69,7 +69,7 @@ class Builder
      * @var string
      * @access protected
      */
-    protected $_persist_key = 'mongoqb';
+    protected $_persistKey = 'mongoqb';
 
     /**
      * Use replica set.
@@ -834,7 +834,7 @@ class Builder
 
         $options = array_merge(
                     array(
-                        $this->_query_safety => true
+                        $this->_querySafety => true
                     ),
                     $options
                 );
@@ -887,7 +887,7 @@ class Builder
 
         $options = array_merge(
                     array(
-                        $this->_query_safety => true
+                        $this->_querySafety => true
                     ),
                     $options
                 );
@@ -927,7 +927,7 @@ class Builder
         }
 
         try {
-            $options = array_merge(array($this->_query_safety => true,
+            $options = array_merge(array($this->_querySafety => true,
              'multiple' => false), $options);
             $result = $this->_dbhandle->{$collection}->update($this->wheres,
              $this->updates, $options);
@@ -973,7 +973,7 @@ class Builder
         }
 
         try {
-            $options = array_merge(array($this->_query_safety => true,
+            $options = array_merge(array($this->_querySafety => true,
              'multiple' => true), $options);
             $result = $this->_dbhandle->{$collection}->update($this->wheres,
              $this->updates, $options);
@@ -1240,7 +1240,7 @@ class Builder
 
         try {
             $this->_dbhandle->{$collection}->remove($this->wheres,
-             array($this->_query_safety => true, 'justOne' => true));
+             array($this->_querySafety => true, 'justOne' => true));
             $this->_clear($collection, 'delete');
 
             return true;
@@ -1273,7 +1273,7 @@ class Builder
 
         try {
             $this->_dbhandle->{$collection}->remove($this->wheres,
-             array($this->_query_safety => true, 'justOne' => false));
+             array($this->_querySafety => true, 'justOne' => false));
             $this->_clear($collection, 'delete_all');
 
             return true;
@@ -1483,10 +1483,7 @@ class Builder
      * Connect to MongoDB
      *
      * Establish a connection to MongoDB using the connection string generated
-     *  in the connection_string() method.  If 'mongo_persist_key' was set to
-     *  true in the config file, establish a persistent connection.  We allow
-     *  for only the 'persist' option to be set because we want to establish a
-     *  connection immediately.
+     *  in the connection_string() method.
      *
      * @return object
      * @access private
@@ -1496,12 +1493,12 @@ class Builder
         $options = array();
 
         if ($this->_persist === true) {
-            $options['persist'] = $this->_persist_key;
+            $options['persist'] = $this->_persistKey;
         }
 
-        if ($this->_replica_set !== false) {
+        if ($this->_replicaSet !== false) {
             // @codeCoverageIgnoreStart
-            $options['replicaSet'] = $this->_replica_set;
+            $options['replicaSet'] = $this->_replicaSet;
 
         } // @codeCoverageIgnoreEnd
 
@@ -1533,9 +1530,9 @@ class Builder
         }
 
         $this->_persist = $this->_configData['persist'];
-        $this->_persist_key = trim($this->_configData['persist_key']);
-        $this->_replica_set = $this->_configData['replica_set'];
-        $this->_query_safety = trim($this->_configData['query_safety']);
+        $this->_persistKey = trim($this->_configData['persist_key']);
+        $this->_replicaSet = $this->_configData['replica_set'];
+        $this->_querySafety = trim($this->_configData['query_safety']);
 
         $parts = parse_url($this->_dsn);
 
