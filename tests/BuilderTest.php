@@ -111,7 +111,14 @@ class QBtest extends PHPUnit_Framework_TestCase {
 		$r = new \ReflectionClass($qb);
 		$_connection = $r->getProperty('_connection');
 		$_connection->setAccessible(true);
-		$this->assertEquals('Mongo', get_class($_connection->getValue($qb)));
+
+		if (phpversion('Mongo') >= 1.3)
+        {
+        	$this->assertEquals('MongoClient', get_class($_connection->getValue($qb)));
+        }
+        else {
+			$this->assertEquals('Mongo', get_class($_connection->getValue($qb)));
+		}
 	}
 
 	/**
