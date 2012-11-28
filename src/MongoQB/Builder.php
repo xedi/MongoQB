@@ -1352,15 +1352,15 @@ class Builder
             }
         }
 
-        if ($this->_dbhandle->{$collection}->ensureIndex($keys, $options)
-         === true) {
+        try {
+            $this->_dbhandle->{$collection}->ensureIndex($keys, $options);
             $this->_clear($collection, 'add_index');
-
             return $this;
-        } else {
-            // @codeCoverageIgnoreStart
+        }
+        // @codeCoverageIgnoreStart
+        catch (\Exception $e) {
             throw new \MongoQB\Exception('An error occurred when trying to add an
-             index to MongoDB Collection');
+             index to MongoDB Collection: ' . $e->getMessage());
             // @codeCoverageIgnoreEnd
         }
     }
@@ -1503,8 +1503,20 @@ class Builder
         } // @codeCoverageIgnoreEnd
 
         try {
-            $this->_connection = new \Mongo($this->_dsn, $options);
-            $this->_dbhandle = $this->_connection->{$this->_dbname};
+            // @codeCoverageIgnoreStart
+            if (phpversion('Mongo') >= 1.3)
+            {
+                unset($options['persist']);
+                $this->_connection = new \MongoClient($this->_dsn, $options);
+                $this->_dbhandle = $this->_connection->{$this->_dbname};
+            }
+
+            else
+            {
+                $this->_connection = new \Mongo($this->_dsn, $options);
+                $this->_dbhandle = $this->_connection->{$this->_dbname};
+            }
+            // @codeCoverageIgnoreEnd
             return $this;
         }
         // @codeCoverageIgnoreStart
