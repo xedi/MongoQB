@@ -1340,6 +1340,7 @@ class Builder
              collection because no keys were specified');
         }
 
+        $keys = array();
         foreach ($fields as $field => $value) {
             if($value === -1 OR $value === false OR
              strtolower($value) === 'desc') {
