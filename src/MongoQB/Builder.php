@@ -816,15 +816,16 @@ class Builder
     }
 
     /**
-    * Count.
-    *
-    * Count the number of found documents
-    *
-    * @param string $collection Name of the collection
-    *
-    * @access public
-    * @return int
-    */
+     * Count.
+     *
+     * Count the number of found documents
+     *
+     * @param string $collection Name of the collection
+     *
+     * @throws Exception
+     * @access public
+     * @return int
+     */
     public function count($collection = '')
     {
         if (empty($collection)) {
