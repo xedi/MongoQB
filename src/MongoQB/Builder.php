@@ -85,7 +85,7 @@ class Builder
      * @var string
      * @access protected
      */
-    protected $_querySafety = 'safe';
+    protected $_querySafety = 'w';
 
     /**
      * Selects array.
