@@ -360,13 +360,8 @@ class Builder
     public function orWhere($wheres = array())
     {
         if (count($wheres) > 0) {
-            if ( ! isset($this->wheres['$or']) OR !
-             is_array($this->wheres['$or'])) {
-                $this->wheres['$or'] = array();
-            }
-
             foreach ($wheres as $where => $value) {
-                $this->wheres['$or'][] = array($where => $value);
+				$this->wheres['$or'][] = $value;
             }
         }
 
